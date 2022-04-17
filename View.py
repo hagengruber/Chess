@@ -2,8 +2,7 @@ import os
 
 
 class View:
-    # Constructor for View
-    def __init__(self):
+    def __int__(self):
         self.model = None
 
     # Updates the board to show the changes that have been made
@@ -31,3 +30,4 @@ class View:
         print(3*b + nb + b + nb + b + nb + 3*b + nb + 3*b + nb + 3*b)
         print('Welcome to TicTacToe! Please enter a number to choose an option :)')
         print('(1)PlayerVsPlayer   (2)PlayerVsBot   (3)LoadGame   (4)Exit')
+        self.model.controller.get_menu_choice()

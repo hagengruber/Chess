@@ -1,10 +1,9 @@
 from Model import Model
-from View import View
+
 
 if __name__ == "__main__":
-    '''graphics = View()
-    data = Model()
-    data.view.model = data
-    data.view.print_menu()'''
-    test = View()
-    test.print_menu()
+    model = Model()
+    model.controller.model = model
+    model.view.model = model
+    model.view.print_menu()
+    model.controller.get_menu_choice()
