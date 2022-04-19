@@ -7,7 +7,20 @@ class View:
 
     # Updates the board to show the changes that have been made
     def update_board(self):
-        pass
+        self.clear_console()
+        box_top = '\u250C' + '\u2500\u2500\u2500\u252C'*7 + '\u2500\u2500\u2500\u2510'
+        box_middle = '\u251C' + '\u2500\u2500\u2500\u253C'*7 + '\u2500\u2500\u2500\u2524'
+        box_bottom = '\u2514' + '\u2500\u2500\u2500\u2534'*7 + '\u2500\u2500\u2500\u2518'
+        print(box_top)
+        for i in range(8):
+            row = ''
+            for j in range(8):
+                row += '\u2502' + ' ' + self.model.board_state[i][j] + ' '
+            row += '\u2502'
+            print(row)
+            if i != 7:
+                print(box_middle)
+        print(box_bottom)
 
     # Clears the Console
     @staticmethod
@@ -20,7 +33,7 @@ class View:
 
     # Show the starting menu
     def print_menu(self):
-        b = u"\u2588"
+        b = '\u2588'
         nb = ' '
         self.clear_console()
         print('\n' + nb + 3*b + nb + b + nb + b + nb + 3*b + nb + 3*b + nb + 3*b)
