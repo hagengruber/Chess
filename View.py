@@ -2,7 +2,7 @@ import os
 
 
 class View:
-    def __int__(self):
+    def __init__(self):
         self.model = None
 
     # Updates the board to show the changes that have been made
@@ -23,11 +23,11 @@ class View:
         b = u"\u2588"
         nb = ' '
         self.clear_console()
-        print('\n' + 3*b + nb + b + nb + b + nb + 3*b + nb + 3*b + nb + 3*b)
-        print(b + 3*nb + b + nb + b + nb + b + 3*nb + b + 3*nb + b)
-        print(b + 3*nb + 3*b + nb + 3*b + nb + 3*b + nb + 3*b)
-        print(b + 3*nb + b + nb + b + nb + b + 5*nb + b + 3*nb + b)
-        print(3*b + nb + b + nb + b + nb + 3*b + nb + 3*b + nb + 3*b)
+        print('\n' + nb + 3*b + nb + b + nb + b + nb + 3*b + nb + 3*b + nb + 3*b)
+        print(nb + b + 3*nb + b + nb + b + nb + b + 3*nb + b + 3*nb + b)
+        print(nb + b + 3*nb + 3*b + nb + 3*b + nb + 3*b + nb + 3*b)
+        print(nb + b + 3*nb + b + nb + b + nb + b + 5*nb + b + 3*nb + b)
+        print(nb + 3*b + nb + b + nb + b + nb + 3*b + nb + 3*b + nb + 3*b + '\n')
         print('Welcome to TicTacToe! Please enter a number to choose an option :)')
         print('(1)PlayerVsPlayer   (2)PlayerVsBot   (3)LoadGame   (4)Exit')
         self.model.controller.get_menu_choice()

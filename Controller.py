@@ -8,7 +8,7 @@ class Controller:
     def get_menu_choice(self):
         selection = input()
         if selection == '1':
-            pass
+            self.model.view.update_board()
         elif selection == '2':
             pass
         elif selection == '3':
