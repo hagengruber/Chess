@@ -1,11 +1,16 @@
+"""
+    Module for getting and processing input from the user
+"""
 import sys
 
 
 class Controller:
+    """Class that handles everything for the module"""
     def __init__(self):
         self.model = None
 
     def get_menu_choice(self):
+        """Gets input from user and processes the input"""
         selection = input()
         if selection == '1':
             self.model.view.update_board()
