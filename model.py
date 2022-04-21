@@ -83,3 +83,4 @@ class Model:
             self.board_state[6][i] = 'p'
 
     def move_piece(self, piece_pos, position):
+        pass

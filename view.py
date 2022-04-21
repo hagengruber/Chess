@@ -13,12 +13,14 @@ class View:
         """Updates the board to show recent movement"""
         self.clear_console()
         self.model.reset_pieces()
-        box_top = '\u250C' + '\u2500\u2500\u2500\u252C'*7 + '\u2500\u2500\u2500\u2510'
-        box_middle = '\u251C' + '\u2500\u2500\u2500\u253C'*7 + '\u2500\u2500\u2500\u2524'
-        box_bottom = '\u2514' + '\u2500\u2500\u2500\u2534'*7 + '\u2500\u2500\u2500\u2518'
+        box_top = ' \u250C' + '\u2500\u2500\u2500\u252C'*7 + '\u2500\u2500\u2500\u2510'
+        box_middle = ' \u251C' + '\u2500\u2500\u2500\u253C'*7 + '\u2500\u2500\u2500\u2524'
+        box_bottom = ' \u2514' + '\u2500\u2500\u2500\u2534'*7 + '\u2500\u2500\u2500\u2518'
+        print('  1   2   3   4   5   6   7   8')
         print(box_top)
+        letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
         for i in range(8):
-            row = ''
+            row = letters[i]
             for j in range(8):
                 row += '\u2502' + ' ' + self.model.board_state[i][j] + ' '
             row += '\u2502'
