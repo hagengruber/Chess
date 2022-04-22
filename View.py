@@ -20,6 +20,13 @@ class View:
 
     # Show the starting menu
     def print_menu(self):
+
+        # ToDo: Vorschlag diskutieren
+        # Vorschlag:
+        # pip install pyfiglet
+        # import pyfiglet
+        # print(pyfiglet.figlet_format("Let's  Play  Chess"))
+
         b = u"\u2588"
         nb = ' '
         self.clear_console()
