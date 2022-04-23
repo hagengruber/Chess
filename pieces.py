@@ -11,6 +11,7 @@ class Piece(metaclass=ABCMeta):
         self.colour = None
         self.moved = False
         self.position = None
+        self.model = None
 
     @abstractmethod
     def check_legal_move(self, position):
@@ -22,11 +23,25 @@ class Piece(metaclass=ABCMeta):
 
 
 class Rook(Piece):
-    def __init__(self, symbol, colour, position):
+    def __init__(self, colour, position, model):
         Piece.__init__(self)
-        self.symbol = symbol
         self.colour = colour
+        self.symbol = self.set_symbol()
+        self.model = model
         self.position = position
+        self.moved = False
+
+    def set_symbol(self):
+        if self.model.show_symbols:
+            if self.colour == 'white':
+                return '\u265C'
+            else:
+                return '\u2656'
+        else:
+            if self.colour == 'white':
+                return 'r'
+            else:
+                return 'R'
 
     def check_legal_move(self, position):
         pass
@@ -36,11 +51,24 @@ class Rook(Piece):
 
 
 class Horse(Piece):
-    def __init__(self, symbol, colour, position):
+    def __init__(self, colour, position, model):
         Piece.__init__(self)
-        self.symbol = symbol
         self.colour = colour
+        self.symbol = self.set_symbol()
+        self.model = model
         self.position = position
+
+    def set_symbol(self):
+        if self.model.show_symbols:
+            if self.colour == 'white':
+                return '\u265E'
+            else:
+                return '\u2658'
+        else:
+            if self.colour == 'white':
+                return 'h'
+            else:
+                return 'H'
 
     def check_legal_move(self, position):
         pass
@@ -50,11 +78,52 @@ class Horse(Piece):
 
 
 class Bishop(Piece):
-    def __init__(self, symbol, colour, position):
+    def __init__(self, colour, position, model):
         Piece.__init__(self)
-        self.symbol = symbol
         self.colour = colour
+        self.symbol = self.set_symbol()
+        self.model = model
         self.position = position
+
+    def set_symbol(self):
+        if self.model.show_symbols:
+            if self.colour == 'white':
+                return '\u265D'
+            else:
+                return '\u2657'
+        else:
+            if self.colour == 'white':
+                return 'b'
+            else:
+                return 'B'
+
+    def check_legal_move(self, position):
+        pass
+
+    def move(self, position):
+        pass
+
+
+class Pawn(Piece):
+    def __init__(self, colour, position, model):
+        Piece.__init__(self)
+        self.colour = colour
+        self.symbol = self.set_symbol()
+        self.model = model
+        self.position = position
+        self.moved = False
+
+    def set_symbol(self):
+        if self.model.show_symbols:
+            if self.colour == 'white':
+                return '\u265F'
+            else:
+                return '\u2659'
+        else:
+            if self.colour == 'white':
+                return 'r'
+            else:
+                return 'R'
 
     def check_legal_move(self, position):
         pass
@@ -64,11 +133,24 @@ class Bishop(Piece):
 
 
 class Queen(Piece):
-    def __init__(self, symbol, colour, position):
+    def __init__(self, colour, position, model):
         Piece.__init__(self)
-        self.symbol = symbol
         self.colour = colour
+        self.symbol = self.set_symbol()
+        self.model = model
         self.position = position
+
+    def set_symbol(self):
+        if self.model.show_symbols:
+            if self.colour == 'white':
+                return '\u265B'
+            else:
+                return '\u2655'
+        else:
+            if self.colour == 'white':
+                return 'q'
+            else:
+                return 'Q'
 
     def check_legal_move(self, position):
         pass
@@ -78,11 +160,25 @@ class Queen(Piece):
 
 
 class King(Piece):
-    def __init__(self, symbol, colour, position):
+    def __init__(self, colour, position, model):
         Piece.__init__(self)
-        self.symbol = symbol
         self.colour = colour
+        self.symbol = self.set_symbol()
+        self.model = model
         self.position = position
+        self.moved = False
+
+    def set_symbol(self):
+        if self.model.show_symbols:
+            if self.colour == 'white':
+                return '\u265A'
+            else:
+                return '\u2654'
+        else:
+            if self.colour == 'white':
+                return 'k'
+            else:
+                return 'K'
 
     def check_legal_move(self, position):
         pass

@@ -22,7 +22,7 @@ class View:
         for i in range(8):
             row = letters[i]
             for j in range(8):
-                row += '\u2502' + ' ' + self.model.board_state[i][j] + ' '
+                row += '\u2502' + ' ' + self.model.board_state[i][j] + ' '  # Change to react to None!!
             row += '\u2502'
             print(row)
             if i != 7:

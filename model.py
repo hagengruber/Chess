@@ -3,13 +3,14 @@
 """
 from view import View
 from controller import Controller
+from pieces import Rook, Horse, Bishop, Pawn, King, Queen
 
 
 class Model:
     """Class that handles everything for the module"""
 
     def __init__(self):
-        self.board_state = [[' '] * 8 for _ in range(9)]
+        self.board_state = [[None] * 8 for _ in range(9)]
         self.view = View()
         self.controller = Controller()
         self.show_symbols = True
@@ -29,61 +30,31 @@ class Model:
                             'G5': (6, 4), 'G6': (6, 5), 'G7': (6, 6), 'G8': (6, 7),
                             'H1': (7, 0), 'H2': (7, 1), 'H3': (7, 2), 'H4': (7, 3),
                             'H5': (7, 4), 'H6': (7, 5), 'H7': (7, 6), 'H8': (7, 7)}
-        self.pieces = [] # to speed up piece_search later?
+        self.pieces = []  # to speed up piece_search later?
         self.currently_playing = 'white'
 
     def reset_pieces(self):
-        """Resets the pieces to their starting position"""
-        if self.show_symbols:
-            self.reset_with_symbols()
-        else:
-            self.reset_with_letters()
-
-    def reset_with_symbols(self):
         """Reset the board using symbols"""
-        self.board_state[0][0] = '\u265C'
-        self.board_state[0][1] = '\u265E'
-        self.board_state[0][2] = '\u265D'
-        self.board_state[0][3] = '\u265B'
-        self.board_state[0][4] = '\u265A'
-        self.board_state[0][5] = '\u265D'
-        self.board_state[0][6] = '\u265E'
-        self.board_state[0][7] = '\u265C'
+        self.board_state[0][0] = Rook('black', (0, 0), self)
+        self.board_state[0][1] = Horse('black', (0, 1), self)
+        self.board_state[0][2] = Bishop('black', (0, 2), self)
+        self.board_state[0][3] = Queen('black', (0, 3), self)
+        self.board_state[0][4] = King('black', (0, 4), self)
+        self.board_state[0][5] = Bishop('black', (0, 5), self)
+        self.board_state[0][6] = Horse('black', (0, 6), self)
+        self.board_state[0][7] = Rook('black', (0, 7), self)
         for i in range(8):
-            self.board_state[1][i] = '\u265F'
-        self.board_state[7][0] = '\u2656'
-        self.board_state[7][1] = '\u2658'
-        self.board_state[7][2] = '\u2657'
-        self.board_state[7][3] = '\u2655'
-        self.board_state[7][4] = '\u2654'
-        self.board_state[7][5] = '\u2657'
-        self.board_state[7][6] = '\u2658'
-        self.board_state[7][7] = '\u2656'
+            self.board_state[1][i] = Pawn('black', (1, i), self)
+        self.board_state[7][0] = Rook('white', (7, 0), self)
+        self.board_state[7][1] = Horse('white', (7, 1), self)
+        self.board_state[7][2] = Bishop('white', (7, 2), self)
+        self.board_state[7][3] = Queen('white', (7, 3), self)
+        self.board_state[7][4] = King('white', (7, 4), self)
+        self.board_state[7][5] = Bishop('white', (7, 5), self)
+        self.board_state[7][6] = Horse('white', (7, 6), self)
+        self.board_state[7][7] = Rook('white', (7, 7), self)
         for i in range(8):
-            self.board_state[6][i] = '\u2659'
-
-    def reset_with_letters(self):
-        """Reset the board using letters"""
-        self.board_state[0][0] = 'R'
-        self.board_state[0][1] = 'H'
-        self.board_state[0][2] = 'B'
-        self.board_state[0][3] = 'Q'
-        self.board_state[0][4] = 'K'
-        self.board_state[0][5] = 'B'
-        self.board_state[0][6] = 'H'
-        self.board_state[0][7] = 'R'
-        for i in range(8):
-            self.board_state[1][i] = 'P'
-        self.board_state[7][0] = 'r'
-        self.board_state[7][1] = 'h'
-        self.board_state[7][2] = 'b'
-        self.board_state[7][3] = 'q'
-        self.board_state[7][4] = 'k'
-        self.board_state[7][5] = 'b'
-        self.board_state[7][6] = 'h'
-        self.board_state[7][7] = 'r'
-        for i in range(8):
-            self.board_state[6][i] = 'p'
+            self.board_state[6][i] = Pawn('white', (6, i), self)
 
     def move_piece(self, start_pos, goal_pos):
         start_line, start_column = start_pos
