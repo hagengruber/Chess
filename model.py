@@ -29,6 +29,8 @@ class Model:
                             'G5': (6, 4), 'G6': (6, 5), 'G7': (6, 6), 'G8': (6, 7),
                             'H1': (7, 0), 'H2': (7, 1), 'H3': (7, 2), 'H4': (7, 3),
                             'H5': (7, 4), 'H6': (7, 5), 'H7': (7, 6), 'H8': (7, 7)}
+        self.pieces = [] # to speed up piece_search later?
+        self.currently_playing = 'white'
 
     def reset_pieces(self):
         """Resets the pieces to their starting position"""
@@ -85,7 +87,20 @@ class Model:
 
     def move_piece(self, start_pos, goal_pos):
         start_line, start_column = start_pos
-        self.board_state[start_line][start_column].move(goal_pos)
+        goal_line, goal_column = goal_pos
+        moved_piece = self.board_state[start_line][start_column]
+        killed_piece = self.board_state[goal_line][goal_column]
+        if moved_piece is not None and moved_piece.colour == self.currently_playing:
+            if self.board_state[start_line][start_column].check_legal_move(goal_pos):
+                self.board_state[goal_line][goal_column] = moved_piece
+                if killed_piece is not None:
+                    self.pieces.remove(killed_piece)
+            else:
+                print('Sorry, this move is not legal. Please try again!')
+                self.get_movement_choice()
+        else:
+            print('There is no piece of your color on this space. Please try again!')
+            self.get_movement_choice()
 
     def get_movement_choice(self):
         pass
