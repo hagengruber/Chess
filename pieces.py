@@ -7,27 +7,29 @@ from abc import ABCMeta, abstractmethod
 class Piece(metaclass=ABCMeta):
     """Base class for all the other classes"""
     def __init__(self):
+        self.model = None
         self.symbol = None
         self.colour = None
         self.moved = False
         self.position = None
-        self.model = None
 
     @abstractmethod
     def check_legal_move(self, position):
+        """Return True if move is legal, False else"""
         pass
 
     @abstractmethod
-    def move(self, position):
+    def move(self, position):  # Is Method even needed?? Function in Model more useful?
+        """Move a Piece to a given Position"""
         pass
 
 
 class Rook(Piece):
     def __init__(self, colour, position, model):
         Piece.__init__(self)
+        self.model = model
         self.colour = colour
         self.symbol = self.set_symbol()
-        self.model = model
         self.position = position
         self.moved = False
 
@@ -53,9 +55,9 @@ class Rook(Piece):
 class Horse(Piece):
     def __init__(self, colour, position, model):
         Piece.__init__(self)
+        self.model = model
         self.colour = colour
         self.symbol = self.set_symbol()
-        self.model = model
         self.position = position
 
     def set_symbol(self):
@@ -80,9 +82,9 @@ class Horse(Piece):
 class Bishop(Piece):
     def __init__(self, colour, position, model):
         Piece.__init__(self)
+        self.model = model
         self.colour = colour
         self.symbol = self.set_symbol()
-        self.model = model
         self.position = position
 
     def set_symbol(self):
@@ -107,9 +109,9 @@ class Bishop(Piece):
 class Pawn(Piece):
     def __init__(self, colour, position, model):
         Piece.__init__(self)
+        self.model = model
         self.colour = colour
         self.symbol = self.set_symbol()
-        self.model = model
         self.position = position
         self.moved = False
 
@@ -121,9 +123,9 @@ class Pawn(Piece):
                 return '\u2659'
         else:
             if self.colour == 'white':
-                return 'r'
+                return 'p'
             else:
-                return 'R'
+                return 'P'
 
     def check_legal_move(self, position):
         pass
@@ -135,9 +137,9 @@ class Pawn(Piece):
 class Queen(Piece):
     def __init__(self, colour, position, model):
         Piece.__init__(self)
+        self.model = model
         self.colour = colour
         self.symbol = self.set_symbol()
-        self.model = model
         self.position = position
 
     def set_symbol(self):
@@ -162,9 +164,9 @@ class Queen(Piece):
 class King(Piece):
     def __init__(self, colour, position, model):
         Piece.__init__(self)
+        self.model = model
         self.colour = colour
         self.symbol = self.set_symbol()
-        self.model = model
         self.position = position
         self.moved = False
 

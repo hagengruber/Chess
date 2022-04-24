@@ -16,13 +16,16 @@ class View:
         box_top = ' \u250C' + '\u2500\u2500\u2500\u252C'*7 + '\u2500\u2500\u2500\u2510'
         box_middle = ' \u251C' + '\u2500\u2500\u2500\u253C'*7 + '\u2500\u2500\u2500\u2524'
         box_bottom = ' \u2514' + '\u2500\u2500\u2500\u2534'*7 + '\u2500\u2500\u2500\u2518'
-        print('  1   2   3   4   5   6   7   8')
+        print('   1   2   3   4   5   6   7   8')
         print(box_top)
         letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
         for i in range(8):
             row = letters[i]
             for j in range(8):
-                row += '\u2502' + ' ' + self.model.board_state[i][j] + ' '  # Change to react to None!!
+                if self.model.board_state[i*8 + j] is not None:
+                    row += '\u2502' + ' ' + self.model.board_state[i*8 + j].symbol + ' '
+                else:
+                    row += '\u2502' + '   '
             row += '\u2502'
             print(row)
             if i != 7:
