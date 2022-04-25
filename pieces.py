@@ -18,10 +18,14 @@ class Piece(metaclass=ABCMeta):
         """Return True if move is legal, False else"""
         pass
 
-    @abstractmethod
-    def move(self, position):  # Is Method even needed?? Function in Model more useful?
-        """Move a Piece to a given Position"""
-        pass
+    def check_occupied_friendly(self, position):
+        if self.model.board_state(position) is not None:
+            if self.model.board_state(position).colour == self.model.currently_playing:
+                return True
+            else:
+                return False
+        else:
+            return False
 
 
 class Rook(Piece):
@@ -48,9 +52,6 @@ class Rook(Piece):
     def check_legal_move(self, position):
         pass
 
-    def move(self, position):
-        pass
-
 
 class Horse(Piece):
     def __init__(self, colour, position, model):
@@ -73,9 +74,6 @@ class Horse(Piece):
                 return 'H'
 
     def check_legal_move(self, position):
-        pass
-
-    def move(self, position):
         pass
 
 
@@ -102,9 +100,6 @@ class Bishop(Piece):
     def check_legal_move(self, position):
         pass
 
-    def move(self, position):
-        pass
-
 
 class Pawn(Piece):
     def __init__(self, colour, position, model):
@@ -128,10 +123,45 @@ class Pawn(Piece):
                 return 'P'
 
     def check_legal_move(self, position):
-        pass
+        allowed = []
+        if self.colour == 'white':
+            if self.check_occupied_friendly(self.position - 8):
+                allowed.append(self.model.board_state[self.position - 8])
+            if self.check_occupied_hostile(self.position - 9):
+                allowed.append(self.model.board_state[self.position - 9])
+            if self.check_occupied_hostile(self.position - 7):
+                allowed.append(self.model.board_state[self.position - 7])
+            if not self.moved:
+                if self.check_occupied_friendly(self.position - 16):
+                    allowed.append(self.model.board_state[self.position - 16])
+        else:
+            if self.check_occupied_friendly(self.position + 8):
+                allowed.append(self.model.board_state[self.position + 8])
+            if self.check_occupied_hostile(self.position + 9):
+                allowed.append(self.model.board_state[self.position + 9])
+            if self.check_occupied_hostile(self.position + 7):
+                allowed.append(self.model.board_state[self.position + 7])
+            if not self.moved:
+                if self.check_occupied_friendly(self.position + 16):
+                    allowed.append(self.model.board_state[self.position + 16])
+        if position in allowed:
+            return True
+        else:
+            return False
 
-    def move(self, position):
-        pass
+
+    def check_occupied_hostile(self, position):
+        if self.model.board_state[position] is not None:
+            if self.model.currently_playing == 'white':
+                if self.model.board_state[position].color == 'black':
+                    return True
+            elif self.model.currently_playing == 'black':
+                if self.model.board_state[position].color == 'white':
+                    return True
+            else:
+                return False
+        else:
+            return False
 
 
 class Queen(Piece):
@@ -157,9 +187,6 @@ class Queen(Piece):
     def check_legal_move(self, position):
         pass
 
-    def move(self, position):
-        pass
-
 
 class King(Piece):
     def __init__(self, colour, position, model):
@@ -182,11 +209,9 @@ class King(Piece):
             else:
                 return 'K'
 
-    def check_legal_move(self, position):
-        pass
-
-    def move(self, position):
-        if self.check_legal_move(position):
-            return self.position, position
-        else:
-            raise IllegalMove()
+    def check_legal_move(self, wanted_position):
+        allowed = [self.position - 1, self.position + 1, self.position ]
+        for _ in [-1, 0, 1]:
+            allowed.append(self.position + 8 + _)
+            allowed.append(self.position - 8 + _)
+        # Remove Spaces if occupied by friendly
