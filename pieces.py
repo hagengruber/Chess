@@ -20,17 +20,32 @@ class Piece(metaclass=ABCMeta):
         pass
 
     def check_occupied_friendly(self, position):
-        if self.model.board_state[position] is not None:
-            if self.model.board_state[position].colour == self.model.currently_playing:
-                return True
+        if position in range(65):
+            if self.model.board_state[position] is not None:
+                if self.model.board_state[position].colour == self.model.currently_playing:
+                    return True
+                else:
+                    return False
             else:
                 return False
         else:
             return False
 
     def check_occupied_hostile(self, position):
-        if self.model.board_state[position] is not None:
-            if self.model.board_state[position].colour != self.model.currently_playing:
+        if position in range(65):
+            if self.model.board_state[position] is not None:
+                if self.model.board_state[position].colour != self.model.currently_playing:
+                    return True
+                else:
+                    return False
+            else:
+                return False
+        else:
+            return False
+
+    def check_occupied(self, position):
+        if position in range(65):
+            if self.check_occupied_hostile(position) or self.check_occupied_friendly(position):
                 return True
             else:
                 return False
@@ -156,7 +171,11 @@ class Rook(Piece):
                 return 'R'
 
     def check_legal_move(self, position):
-        pass
+        allowed = self.check_linear()
+        if position in allowed:
+            return True
+        else:
+            return False
 
 
 class Horse(Piece):
@@ -204,7 +223,11 @@ class Bishop(Piece):
                 return 'B'
 
     def check_legal_move(self, position):
-        pass
+        allowed = self.check_diagonal()
+        if position in allowed:
+            return True
+        else:
+            return False
 
 
 class Pawn(Piece):
@@ -231,40 +254,27 @@ class Pawn(Piece):
     def check_legal_move(self, position):
         allowed = []
         if self.colour == 'white':
-            if self.check_occupied_friendly(self.position - 8):
-                allowed.append(self.model.board_state[self.position - 8])
+            if not self.check_occupied(self.position - 8):
+                allowed.append(self.position - 8)
             if self.check_occupied_hostile(self.position - 9):
-                allowed.append(self.model.board_state[self.position - 9])
+                allowed.append(self.position - 9)
             if self.check_occupied_hostile(self.position - 7):
-                allowed.append(self.model.board_state[self.position - 7])
+                allowed.append(self.position - 7)
             if not self.moved:
-                if self.check_occupied_friendly(self.position - 16):
-                    allowed.append(self.model.board_state[self.position - 16])
+                if self.check_occupied(self.position - 16):
+                    allowed.append(self.position - 16)
         else:
-            if self.check_occupied_friendly(self.position + 8):
-                allowed.append(self.model.board_state[self.position + 8])
+            if not self.check_occupied(self.position + 8):
+                allowed.append(self.position + 8)
             if self.check_occupied_hostile(self.position + 9):
-                allowed.append(self.model.board_state[self.position + 9])
+                allowed.append(self.position + 9)
             if self.check_occupied_hostile(self.position + 7):
-                allowed.append(self.model.board_state[self.position + 7])
+                allowed.append(self.position + 7)
             if not self.moved:
-                if self.check_occupied_friendly(self.position + 16):
-                    allowed.append(self.model.board_state[self.position + 16])
+                if self.check_occupied(self.position + 16):
+                    allowed.append(self.position + 16)
         if position in allowed:
             return True
-        else:
-            return False
-
-    def check_occupied_hostile(self, position):
-        if self.model.board_state[position] is not None:
-            if self.model.currently_playing == 'white':
-                if self.model.board_state[position].color == 'black':
-                    return True
-            elif self.model.currently_playing == 'black':
-                if self.model.board_state[position].color == 'white':
-                    return True
-            else:
-                return False
         else:
             return False
 
