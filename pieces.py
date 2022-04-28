@@ -19,13 +19,73 @@ class Piece(metaclass=ABCMeta):
         pass
 
     def check_occupied_friendly(self, position):
-        if self.model.board_state(position) is not None:
-            if self.model.board_state(position).colour == self.model.currently_playing:
+        if self.model.board_state[position] is not None:
+            if self.model.board_state[position].colour == self.model.currently_playing:
                 return True
             else:
                 return False
         else:
             return False
+
+    def check_occupied_hostile(self, position):
+        if self.model.board_state[position] is not None:
+            if self.model.board_state[position].colour != self.model.currently_playing:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def check_linear(self):
+        allowed = []
+        space_to_check = self.position - 8
+        while True:
+            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+                if self.check_occupied_hostile(space_to_check):
+                    allowed.append(space_to_check)
+                    break
+                else:
+                    allowed.append(space_to_check)
+                    space_to_check = space_to_check - 8
+            else:
+                break
+        space_to_check = self.position + 8
+        while True:
+            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+                if self.check_occupied_hostile(space_to_check):
+                    allowed.append(space_to_check)
+                    break
+                else:
+                    allowed.append(space_to_check)
+                    space_to_check = space_to_check + 8
+            else:
+                break
+        space_to_check = self.position - 1
+        while True:
+            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+                if self.check_occupied_hostile(space_to_check):
+                    allowed.append(space_to_check)
+                    break
+                else:
+                    allowed.append(space_to_check)
+                    space_to_check = space_to_check - 1
+            else:
+                break
+        space_to_check = self.position + 1
+        while True:
+            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+                if self.check_occupied_hostile(space_to_check):
+                    allowed.append(space_to_check)
+                    break
+                else:
+                    allowed.append(space_to_check)
+                    space_to_check = space_to_check + 1
+            else:
+                break
+
+
+    def check_diagonal(self):
+        pass
 
 
 class Rook(Piece):
@@ -210,8 +270,4 @@ class King(Piece):
                 return 'K'
 
     def check_legal_move(self, wanted_position):
-        allowed = [self.position - 1, self.position + 1, self.position ]
-        for _ in [-1, 0, 1]:
-            allowed.append(self.position + 8 + _)
-            allowed.append(self.position - 8 + _)
-        # Remove Spaces if occupied by friendly
+        pass
