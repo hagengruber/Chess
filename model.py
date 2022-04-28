@@ -11,7 +11,7 @@ class Model:
     """Class that handles everything for the module"""
 
     def __init__(self):
-        self.board_state = list(None for _ in range(65))
+        self.board_state = list(None for _ in range(64))
         self.view = View()
         self.controller = Controller()
         self.show_symbols = True
@@ -38,7 +38,7 @@ class Model:
         self.board_state[6] = Horse('black', 6, model)
         self.board_state[7] = Rook('black', 7, model)
         for i in range(8):
-            self.board_state[8 + i] = Pawn('black', i, model)
+            self.board_state[8 + i] = Pawn('black', 8+i, model)
         self.board_state[56] = Rook('white', 56, model)
         self.board_state[57] = Horse('white', 57, model)
         self.board_state[58] = Bishop('white', 58, model)
@@ -48,9 +48,9 @@ class Model:
         self.board_state[62] = Horse('white', 62, model)
         self.board_state[63] = Rook('white', 63, model)
         for i in range(8):
-            self.board_state[48 + i] = Pawn('white', i, model)
+            self.board_state[48 + i] = Pawn('white', 48+i, model)
         self.pieces.clear()
-        for _ in range(63):
+        for _ in range(64):
             if self.board_state[_] is not None:
                 self.pieces.append(self.board_state[_])
 
@@ -60,11 +60,23 @@ class Model:
         if moved_piece is not None and moved_piece.colour == self.currently_playing:
             if self.board_state[start_pos].check_legal_move(goal_pos):
                 self.board_state[goal_pos] = moved_piece
+                self.board_state[start_pos] = None
                 if killed_piece is not None:
                     self.pieces.remove(killed_piece)
+                self.view.update_board()
             else:
                 print('Sorry, this move is not legal. Please try again!')
-                self.get_movement_choice()
+                self.controller.get_movement_choice()
+                self.view.update_board()
         else:
             print('There is no piece of your color on this space. Please try again!')
             self.controller.get_movement_choice()
+
+    def check_for_king(self):
+        king_alive = False
+        for i in self.pieces:
+            if type(i) == King and i.colour == self.currently_playing:
+                king_alive = True
+                break
+        return king_alive
+

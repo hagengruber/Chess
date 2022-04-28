@@ -261,7 +261,7 @@ class Pawn(Piece):
             if self.check_occupied_hostile(self.position - 7):
                 allowed.append(self.position - 7)
             if not self.moved:
-                if self.check_occupied(self.position - 16):
+                if not self.check_occupied(self.position - 16):
                     allowed.append(self.position - 16)
         else:
             if not self.check_occupied(self.position + 8):
@@ -271,7 +271,7 @@ class Pawn(Piece):
             if self.check_occupied_hostile(self.position + 7):
                 allowed.append(self.position + 7)
             if not self.moved:
-                if self.check_occupied(self.position + 16):
+                if not self.check_occupied(self.position + 16):
                     allowed.append(self.position + 16)
         if position in allowed:
             return True

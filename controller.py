@@ -13,8 +13,18 @@ class Controller:
         """Gets input from user and processes the input"""
         selection = input()
         if selection == '1':
+            self.model.reset_pieces()
             self.model.view.update_board()
             self.get_movement_choice()
+            self.model.currently_playing = 'black'
+            while self.model.check_for_king():
+                self.model.view.update_board()
+                self.get_movement_choice()
+                if self.model.currently_playing == 'white':
+                    self.model.currently_playing = 'black'
+                else:
+                    self.model.currently_playing = 'white'
+            print(self.model.currently_playing + ' lost because his king died!')
         elif selection == '2':
             pass
         elif selection == '3':
