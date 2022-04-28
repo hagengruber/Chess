@@ -6,6 +6,7 @@ from abc import ABCMeta, abstractmethod
 
 class Piece(metaclass=ABCMeta):
     """Base class for all the other classes"""
+
     def __init__(self):
         self.model = None
         self.symbol = None
@@ -82,10 +83,55 @@ class Piece(metaclass=ABCMeta):
                     space_to_check = space_to_check + 1
             else:
                 break
-
+        return allowed
 
     def check_diagonal(self):
-        pass
+        allowed = []
+        space_to_check = self.position - 9
+        while True:
+            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+                if self.check_occupied_hostile(space_to_check):
+                    allowed.append(space_to_check)
+                    break
+                else:
+                    allowed.append(space_to_check)
+                    space_to_check = space_to_check - 9
+            else:
+                break
+        space_to_check = self.position + 9
+        while True:
+            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+                if self.check_occupied_hostile(space_to_check):
+                    allowed.append(space_to_check)
+                    break
+                else:
+                    allowed.append(space_to_check)
+                    space_to_check = space_to_check + 9
+            else:
+                break
+        space_to_check = self.position - 7
+        while True:
+            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+                if self.check_occupied_hostile(space_to_check):
+                    allowed.append(space_to_check)
+                    break
+                else:
+                    allowed.append(space_to_check)
+                    space_to_check = space_to_check - 7
+            else:
+                break
+        space_to_check = self.position + 7
+        while True:
+            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+                if self.check_occupied_hostile(space_to_check):
+                    allowed.append(space_to_check)
+                    break
+                else:
+                    allowed.append(space_to_check)
+                    space_to_check = space_to_check + 7
+            else:
+                break
+        return allowed
 
 
 class Rook(Piece):
@@ -208,7 +254,6 @@ class Pawn(Piece):
             return True
         else:
             return False
-
 
     def check_occupied_hostile(self, position):
         if self.model.board_state[position] is not None:
