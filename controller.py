@@ -16,14 +16,14 @@ class Controller:
             self.model.reset_pieces()
             self.model.view.update_board()
             self.get_movement_choice()
-            self.model.currently_playing = 'black'
+            self.model.currently_playing = 'Black'
             while self.model.check_for_king():
                 self.model.view.update_board()
                 self.get_movement_choice()
-                if self.model.currently_playing == 'white':
-                    self.model.currently_playing = 'black'
+                if self.model.currently_playing == 'White':
+                    self.model.currently_playing = 'Black'
                 else:
-                    self.model.currently_playing = 'white'
+                    self.model.currently_playing = 'White'
             print(self.model.currently_playing + ' lost because his king died!')
         elif selection == '2':
             pass

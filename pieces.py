@@ -20,7 +20,7 @@ class Piece(metaclass=ABCMeta):
         pass
 
     def check_occupied_friendly(self, position):
-        if position in range(65):
+        if position in range(64):
             if self.model.board_state[position] is not None:
                 if self.model.board_state[position].colour == self.model.currently_playing:
                     return True
@@ -32,7 +32,7 @@ class Piece(metaclass=ABCMeta):
             return False
 
     def check_occupied_hostile(self, position):
-        if position in range(65):
+        if position in range(64):
             if self.model.board_state[position] is not None:
                 if self.model.board_state[position].colour != self.model.currently_playing:
                     return True
@@ -44,7 +44,7 @@ class Piece(metaclass=ABCMeta):
             return False
 
     def check_occupied(self, position):
-        if position in range(65):
+        if position in range(64):
             if self.check_occupied_hostile(position) or self.check_occupied_friendly(position):
                 return True
             else:
@@ -55,8 +55,8 @@ class Piece(metaclass=ABCMeta):
     def check_linear(self):
         allowed = []
         space_to_check = self.position - 8
-        while True:
-            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+        while space_to_check in range(64):
+            if not self.check_occupied_friendly(space_to_check):
                 if self.check_occupied_hostile(space_to_check):
                     allowed.append(space_to_check)
                     break
@@ -66,8 +66,8 @@ class Piece(metaclass=ABCMeta):
             else:
                 break
         space_to_check = self.position + 8
-        while True:
-            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+        while space_to_check in range(64):
+            if not self.check_occupied_friendly(space_to_check):
                 if self.check_occupied_hostile(space_to_check):
                     allowed.append(space_to_check)
                     break
@@ -77,8 +77,8 @@ class Piece(metaclass=ABCMeta):
             else:
                 break
         space_to_check = self.position - 1
-        while True:
-            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+        while space_to_check in range(64):
+            if not self.check_occupied_friendly(space_to_check):
                 if self.check_occupied_hostile(space_to_check):
                     allowed.append(space_to_check)
                     break
@@ -88,8 +88,8 @@ class Piece(metaclass=ABCMeta):
             else:
                 break
         space_to_check = self.position + 1
-        while True:
-            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+        while space_to_check in range(64):
+            if not self.check_occupied_friendly(space_to_check):
                 if self.check_occupied_hostile(space_to_check):
                     allowed.append(space_to_check)
                     break
@@ -103,8 +103,8 @@ class Piece(metaclass=ABCMeta):
     def check_diagonal(self):
         allowed = []
         space_to_check = self.position - 9
-        while True:
-            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+        while space_to_check in range(64):
+            if not self.check_occupied_friendly(space_to_check):
                 if self.check_occupied_hostile(space_to_check):
                     allowed.append(space_to_check)
                     break
@@ -114,8 +114,8 @@ class Piece(metaclass=ABCMeta):
             else:
                 break
         space_to_check = self.position + 9
-        while True:
-            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+        while space_to_check in range(64):
+            if not self.check_occupied_friendly(space_to_check):
                 if self.check_occupied_hostile(space_to_check):
                     allowed.append(space_to_check)
                     break
@@ -125,8 +125,8 @@ class Piece(metaclass=ABCMeta):
             else:
                 break
         space_to_check = self.position - 7
-        while True:
-            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+        while space_to_check in range(64):
+            if not self.check_occupied_friendly(space_to_check):
                 if self.check_occupied_hostile(space_to_check):
                     allowed.append(space_to_check)
                     break
@@ -136,8 +136,8 @@ class Piece(metaclass=ABCMeta):
             else:
                 break
         space_to_check = self.position + 7
-        while True:
-            if space_to_check in range(65) and not self.check_occupied_friendly(space_to_check):
+        while space_to_check in range(64):
+            if not self.check_occupied_friendly(space_to_check):
                 if self.check_occupied_hostile(space_to_check):
                     allowed.append(space_to_check)
                     break
@@ -160,12 +160,12 @@ class Rook(Piece):
 
     def set_symbol(self):
         if self.model.show_symbols:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return '\u265C'
             else:
                 return '\u2656'
         else:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return 'r'
             else:
                 return 'R'
@@ -188,18 +188,38 @@ class Horse(Piece):
 
     def set_symbol(self):
         if self.model.show_symbols:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return '\u265E'
             else:
                 return '\u2658'
         else:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return 'h'
             else:
                 return 'H'
 
     def check_legal_move(self, position):
-        pass
+        allowed = []
+        if not self.check_occupied_friendly(self.position - 17):
+            allowed.append(self.position - 17)
+        if not self.check_occupied_friendly(self.position - 15):
+            allowed.append(self.position - 15)
+        if not self.check_occupied_friendly(self.position - 10):
+            allowed.append(self.position - 10)
+        if not self.check_occupied_friendly(self.position - 6):
+            allowed.append(self.position - 6)
+        if not self.check_occupied_friendly(self.position + 17):
+            allowed.append(self.position + 17)
+        if not self.check_occupied_friendly(self.position + 15):
+            allowed.append(self.position + 15)
+        if not self.check_occupied_friendly(self.position + 10):
+            allowed.append(self.position + 10)
+        if not self.check_occupied_friendly(self.position + 6):
+            allowed.append(self.position + 6)
+        if position in allowed:
+            return True
+        else:
+            return False
 
 
 class Bishop(Piece):
@@ -212,12 +232,12 @@ class Bishop(Piece):
 
     def set_symbol(self):
         if self.model.show_symbols:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return '\u265D'
             else:
                 return '\u2657'
         else:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return 'b'
             else:
                 return 'B'
@@ -241,19 +261,19 @@ class Pawn(Piece):
 
     def set_symbol(self):
         if self.model.show_symbols:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return '\u265F'
             else:
                 return '\u2659'
         else:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return 'p'
             else:
                 return 'P'
 
     def check_legal_move(self, position):
         allowed = []
-        if self.colour == 'white':
+        if self.colour == 'White':
             if not self.check_occupied(self.position - 8):
                 allowed.append(self.position - 8)
             if self.check_occupied_hostile(self.position - 9):
@@ -289,18 +309,22 @@ class Queen(Piece):
 
     def set_symbol(self):
         if self.model.show_symbols:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return '\u265B'
             else:
                 return '\u2655'
         else:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return 'q'
             else:
                 return 'Q'
 
     def check_legal_move(self, position):
-        pass
+        allowed = self.check_linear() + self.check_diagonal()
+        if position in allowed:
+            return True
+        else:
+            return False
 
 
 class King(Piece):
@@ -314,15 +338,35 @@ class King(Piece):
 
     def set_symbol(self):
         if self.model.show_symbols:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return '\u265A'
             else:
                 return '\u2654'
         else:
-            if self.colour == 'white':
+            if self.colour == 'White':
                 return 'k'
             else:
                 return 'K'
 
-    def check_legal_move(self, wanted_position):
-        pass
+    def check_legal_move(self, position):
+        allowed = []
+        if not self.check_occupied_friendly(self.position - 9):
+            allowed.append(self.position - 9)
+        if not self.check_occupied_friendly(self.position - 8):
+            allowed.append(self.position - 8)
+        if not self.check_occupied_friendly(self.position - 7):
+            allowed.append(self.position - 7)
+        if not self.check_occupied_friendly(self.position - 1):
+            allowed.append(self.position - 1)
+        if not self.check_occupied_friendly(self.position + 1):
+            allowed.append(self.position + 1)
+        if not self.check_occupied_friendly(self.position + 7):
+            allowed.append(self.position + 7)
+        if not self.check_occupied_friendly(self.position + 8):
+            allowed.append(self.position + 8)
+        if not self.check_occupied_friendly(self.position + 9):
+            allowed.append(self.position + 9)
+        if position in allowed:
+            return True
+        else:
+            return False

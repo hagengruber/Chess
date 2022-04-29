@@ -15,6 +15,7 @@ class View:
         box_top = ' \u250C' + '\u2500\u2500\u2500\u252C'*7 + '\u2500\u2500\u2500\u2510'
         box_middle = ' \u251C' + '\u2500\u2500\u2500\u253C'*7 + '\u2500\u2500\u2500\u2524'
         box_bottom = ' \u2514' + '\u2500\u2500\u2500\u2534'*7 + '\u2500\u2500\u2500\u2518'
+        print(self.model.currently_playing + ' is currently playing!')
         print('   1   2   3   4   5   6   7   8')
         print(box_top)
         letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
@@ -55,6 +56,6 @@ class View:
               + 5*no_block + block + 3*no_block + block)
         print(no_block + 3*block + no_block + block + no_block + block + no_block + 3*block
               + no_block + 3*block + no_block + 3*block + '\n')
-        print('Welcome to TicTacToe! Please enter a number to choose an option :)')
+        print('Welcome to Chess! Please enter a number to choose an option :)')
         print('(1)PlayerVsPlayer   (2)PlayerVsBot   (3)LoadGame   (4)Exit')
         self.model.controller.get_menu_choice()

@@ -23,32 +23,32 @@ class Model:
                             'F1': 40, 'F2': 41, 'F3': 42, 'F4': 43, 'F5': 44, 'F6': 45, 'F7': 46, 'F8': 47,
                             'G1': 48, 'G2': 49, 'G3': 50, 'G4': 51, 'G5': 52, 'G6': 53, 'G7': 54, 'G8': 55,
                             'H1': 56, 'H2': 57, 'H3': 58, 'H4': 59, 'H5': 60, 'H6': 61, 'H7': 62, 'H8': 63}
-        self.pieces = []  # to speed up piece_search later?
-        self.currently_playing = 'white'
+        self.pieces = []
+        self.currently_playing = 'White'
 
     def reset_pieces(self):
         """Reset the board using symbols"""
         model = self
-        self.board_state[0] = Rook('black', 0, model)
-        self.board_state[1] = Horse('black', 1, model)
-        self.board_state[2] = Bishop('black', 2, model)
-        self.board_state[3] = Queen('black', 3, model)
-        self.board_state[4] = King('black', 4, model)
-        self.board_state[5] = Bishop('black', 5, model)
-        self.board_state[6] = Horse('black', 6, model)
-        self.board_state[7] = Rook('black', 7, model)
+        self.board_state[0] = Rook('Black', 0, model)
+        self.board_state[1] = Horse('Black', 1, model)
+        self.board_state[2] = Bishop('Black', 2, model)
+        self.board_state[3] = Queen('Black', 3, model)
+        self.board_state[4] = King('Black', 4, model)
+        self.board_state[5] = Bishop('Black', 5, model)
+        self.board_state[6] = Horse('Black', 6, model)
+        self.board_state[7] = Rook('Black', 7, model)
         for i in range(8):
-            self.board_state[8 + i] = Pawn('black', 8+i, model)
-        self.board_state[56] = Rook('white', 56, model)
-        self.board_state[57] = Horse('white', 57, model)
-        self.board_state[58] = Bishop('white', 58, model)
-        self.board_state[59] = Queen('white', 59, model)
-        self.board_state[60] = King('white', 60, model)
-        self.board_state[61] = Bishop('white', 61, model)
-        self.board_state[62] = Horse('white', 62, model)
-        self.board_state[63] = Rook('white', 63, model)
+            self.board_state[8 + i] = Pawn('Black', 8+i, model)
+        self.board_state[56] = Rook('White', 56, model)
+        self.board_state[57] = Horse('White', 57, model)
+        self.board_state[58] = Bishop('White', 58, model)
+        self.board_state[59] = Queen('White', 59, model)
+        self.board_state[60] = King('White', 60, model)
+        self.board_state[61] = Bishop('White', 61, model)
+        self.board_state[62] = Horse('White', 62, model)
+        self.board_state[63] = Rook('White', 63, model)
         for i in range(8):
-            self.board_state[48 + i] = Pawn('white', 48+i, model)
+            self.board_state[48 + i] = Pawn('White', 48+i, model)
         self.pieces.clear()
         for _ in range(64):
             if self.board_state[_] is not None:
@@ -61,6 +61,8 @@ class Model:
             if self.board_state[start_pos].check_legal_move(goal_pos):
                 self.board_state[goal_pos] = moved_piece
                 self.board_state[start_pos] = None
+                moved_piece.position = goal_pos
+                moved_piece.moved = True
                 if killed_piece is not None:
                     self.pieces.remove(killed_piece)
                 self.view.update_board()
