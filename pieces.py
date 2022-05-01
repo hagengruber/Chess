@@ -315,6 +315,19 @@ class Pawn(Piece):
         else:
             return False
 
+    def upgrade(self):
+        """Returns True if the Pawn is in an upgrade-position"""
+        if self.colour == 'Black':
+            if self.position in range(56, 63):
+                return True
+            else:
+                return False
+        else:
+            if self.position in range(0, 7):
+                return True
+            else:
+                return False
+
 
 class Queen(Piece):
     """Class for Queens"""

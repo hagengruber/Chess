@@ -56,6 +56,7 @@ class Model:
 
     def move_piece(self, start_pos, goal_pos):
         """Move a piece to a given position if the move is legal"""
+        model = self
         moved_piece = self.board_state[start_pos]
         killed_piece = self.board_state[goal_pos]
         if moved_piece is not None and moved_piece.colour == self.currently_playing:
@@ -63,6 +64,9 @@ class Model:
                 self.board_state[goal_pos] = moved_piece
                 self.board_state[start_pos] = None
                 moved_piece.position = goal_pos
+                if type(moved_piece) == Pawn:
+                    if moved_piece.upgrade():
+                        self.board_state[goal_pos] = Queen(self.currently_playing, goal_pos, model)
                 moved_piece.moved = True
                 if killed_piece is not None:
                     self.pieces.remove(killed_piece)
