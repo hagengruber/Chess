@@ -27,7 +27,7 @@ class Model:
         self.currently_playing = 'White'
 
     def reset_pieces(self):
-        """Reset the board using symbols"""
+        """Reset the board to its starting state"""
         model = self
         self.board_state[0] = Rook('Black', 0, model)
         self.board_state[1] = Horse('Black', 1, model)
@@ -38,7 +38,7 @@ class Model:
         self.board_state[6] = Horse('Black', 6, model)
         self.board_state[7] = Rook('Black', 7, model)
         for i in range(8):
-            self.board_state[8 + i] = Pawn('Black', 8+i, model)
+            self.board_state[8 + i] = Pawn('Black', 8 + i, model)
         self.board_state[56] = Rook('White', 56, model)
         self.board_state[57] = Horse('White', 57, model)
         self.board_state[58] = Bishop('White', 58, model)
@@ -48,13 +48,14 @@ class Model:
         self.board_state[62] = Horse('White', 62, model)
         self.board_state[63] = Rook('White', 63, model)
         for i in range(8):
-            self.board_state[48 + i] = Pawn('White', 48+i, model)
+            self.board_state[48 + i] = Pawn('White', 48 + i, model)
         self.pieces.clear()
         for _ in range(64):
             if self.board_state[_] is not None:
                 self.pieces.append(self.board_state[_])
 
     def move_piece(self, start_pos, goal_pos):
+        """Move a piece to a given position if the move is legal"""
         moved_piece = self.board_state[start_pos]
         killed_piece = self.board_state[goal_pos]
         if moved_piece is not None and moved_piece.colour == self.currently_playing:
@@ -75,10 +76,10 @@ class Model:
             self.controller.get_movement_choice()
 
     def check_for_king(self):
+        """Check whether the king of the currently playing team is alive or not """
         king_alive = False
         for i in self.pieces:
             if type(i) == King and i.colour == self.currently_playing:
                 king_alive = True
                 break
         return king_alive
-

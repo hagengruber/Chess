@@ -20,6 +20,7 @@ class Piece(metaclass=ABCMeta):
         pass
 
     def check_occupied_friendly(self, position):
+        """Returns true if a given position exists and is occupied by a friendly piece"""
         if position in range(64):
             if self.model.board_state[position] is not None:
                 if self.model.board_state[position].colour == self.model.currently_playing:
@@ -32,6 +33,7 @@ class Piece(metaclass=ABCMeta):
             return False
 
     def check_occupied_hostile(self, position):
+        """Returns true if a given position exists and is occupied by a hostile piece"""
         if position in range(64):
             if self.model.board_state[position] is not None:
                 if self.model.board_state[position].colour != self.model.currently_playing:
@@ -44,6 +46,7 @@ class Piece(metaclass=ABCMeta):
             return False
 
     def check_occupied(self, position):
+        """Returns true if a given position exists and is occupied"""
         if position in range(64):
             if self.check_occupied_hostile(position) or self.check_occupied_friendly(position):
                 return True
@@ -53,6 +56,7 @@ class Piece(metaclass=ABCMeta):
             return False
 
     def check_linear(self):
+        """Returns a list of all free spaces north, east, west and south of a given space"""
         allowed = []
         space_to_check = self.position - 8
         while space_to_check in range(64):
@@ -101,6 +105,7 @@ class Piece(metaclass=ABCMeta):
         return allowed
 
     def check_diagonal(self):
+        """Returns a list of all free spaces northeast, southeast, southwest and northwest of a given space"""
         allowed = []
         space_to_check = self.position - 9
         while space_to_check in range(64):
@@ -150,6 +155,7 @@ class Piece(metaclass=ABCMeta):
 
 
 class Rook(Piece):
+    """Class for Rooks"""
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -159,6 +165,7 @@ class Rook(Piece):
         self.moved = False
 
     def set_symbol(self):
+        """Returns the Symbol the given piece should display"""
         if self.model.show_symbols:
             if self.colour == 'White':
                 return '\u265C'
@@ -171,6 +178,7 @@ class Rook(Piece):
                 return 'R'
 
     def check_legal_move(self, position):
+        """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = self.check_linear()
         if position in allowed:
             return True
@@ -179,6 +187,7 @@ class Rook(Piece):
 
 
 class Horse(Piece):
+    """Class for Horses"""
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -187,6 +196,7 @@ class Horse(Piece):
         self.position = position
 
     def set_symbol(self):
+        """Returns the Symbol the given piece should display"""
         if self.model.show_symbols:
             if self.colour == 'White':
                 return '\u265E'
@@ -199,6 +209,7 @@ class Horse(Piece):
                 return 'H'
 
     def check_legal_move(self, position):
+        """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = []
         if not self.check_occupied_friendly(self.position - 17):
             allowed.append(self.position - 17)
@@ -223,6 +234,7 @@ class Horse(Piece):
 
 
 class Bishop(Piece):
+    """Class for Bishops"""
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -231,6 +243,7 @@ class Bishop(Piece):
         self.position = position
 
     def set_symbol(self):
+        """Returns the Symbol the given piece should display"""
         if self.model.show_symbols:
             if self.colour == 'White':
                 return '\u265D'
@@ -243,6 +256,7 @@ class Bishop(Piece):
                 return 'B'
 
     def check_legal_move(self, position):
+        """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = self.check_diagonal()
         if position in allowed:
             return True
@@ -251,6 +265,7 @@ class Bishop(Piece):
 
 
 class Pawn(Piece):
+    """Class for Pawns"""
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -260,6 +275,7 @@ class Pawn(Piece):
         self.moved = False
 
     def set_symbol(self):
+        """Returns the Symbol the given piece should display"""
         if self.model.show_symbols:
             if self.colour == 'White':
                 return '\u265F'
@@ -272,6 +288,7 @@ class Pawn(Piece):
                 return 'P'
 
     def check_legal_move(self, position):
+        """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = []
         if self.colour == 'White':
             if not self.check_occupied(self.position - 8):
@@ -300,6 +317,7 @@ class Pawn(Piece):
 
 
 class Queen(Piece):
+    """Class for Queens"""
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -308,6 +326,7 @@ class Queen(Piece):
         self.position = position
 
     def set_symbol(self):
+        """Returns the Symbol the given piece should display"""
         if self.model.show_symbols:
             if self.colour == 'White':
                 return '\u265B'
@@ -320,6 +339,7 @@ class Queen(Piece):
                 return 'Q'
 
     def check_legal_move(self, position):
+        """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = self.check_linear() + self.check_diagonal()
         if position in allowed:
             return True
@@ -328,6 +348,7 @@ class Queen(Piece):
 
 
 class King(Piece):
+    """Class for Kings"""
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -337,6 +358,7 @@ class King(Piece):
         self.moved = False
 
     def set_symbol(self):
+        """Returns the Symbol the given piece should display"""
         if self.model.show_symbols:
             if self.colour == 'White':
                 return '\u265A'
@@ -349,6 +371,7 @@ class King(Piece):
                 return 'K'
 
     def check_legal_move(self, position):
+        """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = []
         if not self.check_occupied_friendly(self.position - 9):
             allowed.append(self.position - 9)
