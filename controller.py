@@ -2,12 +2,15 @@
     Module for getting and processing input from the user
 """
 import sys
+from algorithm import AI
+from time import sleep
 
 
 class Controller:
     """Class that handles everything for the module"""
-    def __init__(self):
+    def __init__(self, view):
         self.model = None
+        self.view = view
 
     def get_menu_choice(self):
         """Gets input from user and processes the input"""
@@ -16,10 +19,25 @@ class Controller:
             self.model.reset_pieces()
             self.model.view.update_board()
             self.get_movement_choice()
+
             self.model.currently_playing = 'Black'
+
+            # ToDO: Remove line. Nur für Tests des Algorithmus
+            ai = AI(self.model, self.view, "Black", "White")
+            ai.move()
+            self.model.currently_playing = 'White'
+            # END
+
             while self.model.check_for_king():
                 self.model.view.update_board()
-                self.get_movement_choice()
+                # ToDO: Remove line. Nur für Tests des Algorithmus
+                if self.model.currently_playing == 'Black':
+                    ai.move()
+                else:
+                    self.get_movement_choice()
+                # END
+
+                # -> self.get_movement_choice()
                 if self.model.currently_playing == 'White':
                     self.model.currently_playing = 'Black'
                 else:

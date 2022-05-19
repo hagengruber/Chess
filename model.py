@@ -4,6 +4,7 @@
 from view import View
 from controller import Controller
 from pieces import Rook, Horse, Bishop, Pawn, King, Queen
+from time import sleep
 
 
 # noinspection PyTypeChecker
@@ -13,7 +14,7 @@ class Model:
     def __init__(self):
         self.board_state = list(None for _ in range(64))
         self.view = View()
-        self.controller = Controller()
+        self.controller = Controller(self.view)
         self.show_symbols = True
         self.correlation = {'A1': 0, 'A2': 1, 'A3': 2, 'A4': 3, 'A5': 4, 'A6': 5, 'A7': 6, 'A8': 7,
                             'B1': 8, 'B2': 9, 'B3': 10, 'B4': 11, 'B5': 12, 'B6': 13, 'B7': 14, 'B8': 15,
@@ -54,12 +55,16 @@ class Model:
             if self.board_state[_] is not None:
                 self.pieces.append(self.board_state[_])
 
-    def move_piece(self, start_pos, goal_pos):
+    def move_piece(self, start_pos, goal_pos, update=True):
         """Move a piece to a given position if the move is legal"""
+
+        # Var "update": the AI trys different moves but the board shouldn't update while AI thinks
+
         model = self
         moved_piece = self.board_state[start_pos]
         killed_piece = self.board_state[goal_pos]
         if moved_piece is not None and moved_piece.colour == self.currently_playing:
+
             if self.board_state[start_pos].check_legal_move(goal_pos):
                 self.board_state[goal_pos] = moved_piece
                 self.board_state[start_pos] = None
@@ -70,11 +75,13 @@ class Model:
                 moved_piece.moved = True
                 if killed_piece is not None:
                     self.pieces.remove(killed_piece)
-                self.view.update_board()
+                if update:
+                    self.view.update_board()
             else:
                 print('Sorry, this move is not legal. Please try again!')
                 self.controller.get_movement_choice()
-                self.view.update_board()
+                if update:
+                    self.view.update_board()
         else:
             print('There is no piece of your color on this space. Please try again!')
             self.controller.get_movement_choice()
@@ -87,3 +94,15 @@ class Model:
                 king_alive = True
                 break
         return king_alive
+
+    def get_copy_board_state(self, state=None):
+
+        if state is None:
+            state = self.board_state
+
+        temp = []
+
+        for i in state:
+            temp.append(i)
+
+        return temp

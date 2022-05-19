@@ -9,9 +9,13 @@ class View:
     def __init__(self):
         self.model = None
 
-    def update_board(self):
+    def update_board(self, state=""):
         """Updates the board to show recent movement"""
         self.clear_console()
+
+        if state == "":
+            state = self.model.board_state
+
         box_top = ' \u250C' + '\u2500\u2500\u2500\u252C'*7 + '\u2500\u2500\u2500\u2510'
         box_middle = ' \u251C' + '\u2500\u2500\u2500\u253C'*7 + '\u2500\u2500\u2500\u2524'
         box_bottom = ' \u2514' + '\u2500\u2500\u2500\u2534'*7 + '\u2500\u2500\u2500\u2518'
@@ -22,8 +26,8 @@ class View:
         for i in range(8):
             row = letters[i]
             for j in range(8):
-                if self.model.board_state[i*8 + j] is not None:
-                    row += '\u2502' + ' ' + self.model.board_state[i*8 + j].symbol + ' '
+                if state[i*8 + j] is not None:
+                    row += '\u2502' + ' ' + state[i*8 + j].symbol + ' '
                 else:
                     row += '\u2502' + '   '
             row += '\u2502'
