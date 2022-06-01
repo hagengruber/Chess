@@ -2,6 +2,7 @@ from time import sleep
 import pieces
 import math
 
+
 class Evaluate:
 
     def __init__(self, current_game_state):
@@ -115,7 +116,7 @@ class Evaluate:
 
         for i in self.current_game_state:
             if type(i) is pieces_type:
-                if i.colour == color:
+                if i.colour == "White":
                     white += piece_val
                 else:
                     y = math.floor(count/8)

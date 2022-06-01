@@ -3,7 +3,6 @@
 """
 import math
 import pieces
-from time import sleep
 from evaluatePieces import Evaluate
 
 
@@ -17,6 +16,8 @@ class AI:
 
     def alpha_beta_pruning(self, state, depth, alpha, beta, ai_playing):
 
+        # self.view.update_board(state)
+
         self.count += 1
         # self.view.update_board(state)
 
@@ -29,14 +30,6 @@ class AI:
             self.model.currently_playing = "White"
             for next_move in self.get_possible_moves(self.enemy, state):
 
-                # ToDO - Weitermachen: Erster Move hier: 40, 32 - F1, E2
-                # Im anderen Algorithmus b2 b3
-                # Schauen woran das liegt und danach den Algorithmus weiter vergleichen
-
-                # print("Other Moves: " + str(len(self.get_possible_moves(self.enemy, state))))
-                # print(self.get_possible_moves(self.enemy, state))
-                # print("Next Move: " + str(next_move))
-
                 # save_board = self.model.get_copy_board_state(state)
                 x, y = next_move
                 # old_pos = self.model.board_state[x].position
@@ -45,15 +38,17 @@ class AI:
 
                 # self.model.currently_playing = "White"
 
+                temp = self.model.get_copy_board_state(state)
+
                 change_position = False
 
                 try:
 
                     # print("Type: " + str(type(state[x])))
-                    change_position = state[x].position
-                    state[x].position = y
-                    state[y] = state[x]
-                    state[x] = None
+                    change_position = temp[x].position
+                    temp[x].position = y
+                    temp[y] = temp[x]
+                    temp[x] = None
                 except AttributeError:
                     pass
 
@@ -63,12 +58,10 @@ class AI:
 
                 # self.model.currently_playing = "Black"
 
-                temp = self.model.get_copy_board_state(state)
-
                 value = self.alpha_beta_pruning(temp, depth - 1, alpha, beta, False)
 
                 if change_position:
-                    state[y].position = change_position
+                    temp[y].position = change_position
 
                 self.model.currently_playing = "Black"
 
@@ -88,6 +81,8 @@ class AI:
             self.model.currently_playing = "Black"
             for next_move in self.get_possible_moves(self.color, state):
 
+                # self.view.update_board(state)
+
                 # print("Own Moves: " + str(len(self.get_possible_moves(self.color, state))))
                 # print(self.get_possible_moves(self.color, state))
 
@@ -97,27 +92,27 @@ class AI:
                 # old_pos = self.model.board_state[x].position
                 # self.model.currently_playing = "White"
 
+                temp = self.model.get_copy_board_state(state)
+
                 change_position = False
 
                 try:
 
                     # print("Type: " + str(type(state[x])))
-                    change_position = state[x].position
-                    state[x].position = y
-                    state[y] = state[x]
-                    state[x] = None
+                    change_position = temp[x].position
+                    temp[x].position = y
+                    temp[y] = temp[x]
+                    temp[x] = None
                 except AttributeError:
                     pass
 
                 # self.model.move_piece(x, y, False)
                 # self.model.currently_playing = "Black"
 
-                temp = self.model.get_copy_board_state(state)
-
                 value = self.alpha_beta_pruning(temp, depth - 1, alpha, beta, True)
 
                 if change_position:
-                    state[y].position = change_position
+                    temp[y].position = change_position
 
                 # self.model.board_state[y].moved = False
                 # self.model.board_state[y].position = old_pos
@@ -136,9 +131,9 @@ class AI:
         piece = ev.get_pieces_evaluate()
 
         pawn = ev.position_evaluate(pieces.Pawn, self.color, 100, ev.PAWN_TABLE)
-        rook = ev.position_evaluate(pieces.Rook, self.color, 500, ev.ROOK_TABLE)
         horse = ev.position_evaluate(pieces.Horse, self.color, 320, ev.HORSE_TABLE)
         bishop = ev.position_evaluate(pieces.Bishop, self.color, 330, ev.BISHOP_TABLE)
+        rook = ev.position_evaluate(pieces.Rook, self.color, 500, ev.ROOK_TABLE)
         queen = ev.position_evaluate(pieces.Queen, self.color, 900, ev.QUEEN_TABLE)
 
         return piece + pawn + rook + horse + bishop + queen
@@ -166,7 +161,7 @@ class AI:
         return move
 
     def move(self):
-        best_score = None
+        best_score = math.inf
         final_move = None
 
         state = self.model.get_copy_board_state()
@@ -189,15 +184,14 @@ class AI:
             # self.model.board_state[y].position = old_pos
 
             current_score = self.alpha_beta_pruning(temp, 3, -math.inf, math.inf, True)
-            # print("COUNT: " + str(self.count) + " SCORE: " + str(current_score))
 
-            if best_score is None:
+            if current_score < best_score:
                 best_score = current_score
                 final_move = next_move
 
-            elif current_score > best_score:
-                best_score = current_score
-                final_move = next_move
+            # elif current_score > best_score:
+                # best_score = current_score
+                # final_move = next_move
 
             # self.model.board_state = save_board
             # del save_board

@@ -60,9 +60,14 @@ class Model:
 
         # Var "update": the AI trys different moves but the board shouldn't update while AI thinks
 
+        print("start: " + str(start_pos))
+        print("Board state: " + str(self.board_state[start_pos]))
+        print("Board: " + str(self.board_state))
+
         model = self
         moved_piece = self.board_state[start_pos]
         killed_piece = self.board_state[goal_pos]
+
         if moved_piece is not None and moved_piece.colour == self.currently_playing:
 
             if self.board_state[start_pos].check_legal_move(goal_pos):
@@ -78,6 +83,8 @@ class Model:
                 if update:
                     self.view.update_board()
             else:
+                print(start_pos)
+                print(goal_pos)
                 print('Sorry, this move is not legal. Please try again!')
                 self.controller.get_movement_choice()
                 if update:

@@ -110,48 +110,111 @@ class Piece(metaclass=ABCMeta):
     def check_diagonal(self, state):
         """Returns a list of all free spaces northeast, southeast, southwest and northwest of a given space"""
         allowed = []
+
+        main_row = math.floor(self.position / 8)
+        main_column = self.position - (main_row * 7) - main_row
+
         space_to_check = self.position - 9
+        row = main_row
+        column = main_column
+        old_row = main_row + 1
+        old_column = main_column + 1
         while space_to_check in range(64):
-            if not self.check_occupied_friendly(space_to_check, state):
-                if self.check_occupied_hostile(space_to_check, state):
-                    allowed.append(space_to_check)
-                    break
+
+            old_row = row
+            old_column = column
+            row = math.floor(space_to_check / 8)
+            column = space_to_check - (row * 7) - row
+
+            if row < old_row and column < old_column:
+
+                if not self.check_occupied_friendly(space_to_check, state):
+                    if self.check_occupied_hostile(space_to_check, state):
+                        allowed.append(space_to_check)
+                        break
+                    else:
+                        allowed.append(space_to_check)
+                        space_to_check = space_to_check - 9
                 else:
-                    allowed.append(space_to_check)
-                    space_to_check = space_to_check - 9
+                    break
             else:
                 break
+
+        row = main_row
+        column = main_column
+        old_row = main_row - 1
+        old_column = main_column - 1
         space_to_check = self.position + 9
         while space_to_check in range(64):
-            if not self.check_occupied_friendly(space_to_check, state):
-                if self.check_occupied_hostile(space_to_check, state):
-                    allowed.append(space_to_check)
-                    break
+
+            old_row = row
+            old_column = column
+            row = math.floor(space_to_check / 8)
+            column = space_to_check - (row * 7) - row
+
+            if row > old_row and column > old_column:
+
+                if not self.check_occupied_friendly(space_to_check, state):
+                    if self.check_occupied_hostile(space_to_check, state):
+                        allowed.append(space_to_check)
+                        break
+                    else:
+                        allowed.append(space_to_check)
+                        space_to_check = space_to_check + 9
                 else:
-                    allowed.append(space_to_check)
-                    space_to_check = space_to_check + 9
+                    break
             else:
                 break
+
+        row = main_row
+        column = main_column
+        old_row = main_row + 1
+        old_column = main_column - 1
         space_to_check = self.position - 7
         while space_to_check in range(64):
-            if not self.check_occupied_friendly(space_to_check, state):
-                if self.check_occupied_hostile(space_to_check, state):
-                    allowed.append(space_to_check)
-                    break
+
+            old_row = row
+            old_column = column
+            row = math.floor(space_to_check / 8)
+            column = space_to_check - (row * 7) - row
+
+            if row < old_row and column > old_column:
+
+                if not self.check_occupied_friendly(space_to_check, state):
+                    if self.check_occupied_hostile(space_to_check, state):
+                        allowed.append(space_to_check)
+                        break
+                    else:
+                        allowed.append(space_to_check)
+                        space_to_check = space_to_check - 7
                 else:
-                    allowed.append(space_to_check)
-                    space_to_check = space_to_check - 7
+                    break
             else:
                 break
+
+        row = main_row
+        column = main_column
+        old_row = main_row - 1
+        old_column = main_column + 1
         space_to_check = self.position + 7
         while space_to_check in range(64):
-            if not self.check_occupied_friendly(space_to_check, state):
-                if self.check_occupied_hostile(space_to_check, state):
-                    allowed.append(space_to_check)
-                    break
+
+            old_row = row
+            old_column = column
+            row = math.floor(space_to_check / 8)
+            column = space_to_check - (row * 7) - row
+
+            if row > old_row and column < old_column:
+
+                if not self.check_occupied_friendly(space_to_check, state):
+                    if self.check_occupied_hostile(space_to_check, state):
+                        allowed.append(space_to_check)
+                        break
+                    else:
+                        allowed.append(space_to_check)
+                        space_to_check = space_to_check + 7
                 else:
-                    allowed.append(space_to_check)
-                    space_to_check = space_to_check + 7
+                    break
             else:
                 break
         return allowed
@@ -159,6 +222,7 @@ class Piece(metaclass=ABCMeta):
 
 class Rook(Piece):
     """Class for Rooks"""
+
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -180,6 +244,7 @@ class Rook(Piece):
             else:
                 return 'R'
 
+    # FixMe: Zeigt legale Züge als Fehler an -> A1 - A2 (A2 gegnerisches Pferd)
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
 
@@ -197,6 +262,7 @@ class Rook(Piece):
 
 class Horse(Piece):
     """Class for Horses"""
+
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -233,7 +299,7 @@ class Horse(Piece):
             allowed.append(self.position - 15)
         if not self.check_occupied_friendly(self.position - 10, state) and row >= 1 and column >= 2:
             allowed.append(self.position - 10)
-        if not self.check_occupied_friendly(self.position - 6, state) and row >= 1 and column >= 5:
+        if not self.check_occupied_friendly(self.position - 6, state) and row >= 1 and column <= 5:
             allowed.append(self.position - 6)
         if not self.check_occupied_friendly(self.position + 17, state) and row <= 5 and column <= 6:
             allowed.append(self.position + 17)
@@ -241,7 +307,7 @@ class Horse(Piece):
             allowed.append(self.position + 15)
         if not self.check_occupied_friendly(self.position + 10, state) and row <= 6 and column <= 5:
             allowed.append(self.position + 10)
-        if not self.check_occupied_friendly(self.position + 6, state) and row <= 6 and column >= 7:
+        if not self.check_occupied_friendly(self.position + 6, state) and row <= 6 and column >= 2:
             allowed.append(self.position + 6)
         if return_all:
             return allowed
@@ -254,6 +320,7 @@ class Horse(Piece):
 
 class Bishop(Piece):
     """Class for Bishops"""
+
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -282,6 +349,8 @@ class Bishop(Piece):
 
         allowed = self.check_diagonal(state)
 
+        test = self.check_diagonal(state)
+
         if return_all:
             return allowed
         if position in allowed:
@@ -292,6 +361,7 @@ class Bishop(Piece):
 
 class Pawn(Piece):
     """Class for Pawns"""
+
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -313,6 +383,7 @@ class Pawn(Piece):
             else:
                 return 'P'
 
+    # FixMe: Springt beim ersten Zug über Figuren
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = []
@@ -368,6 +439,7 @@ class Pawn(Piece):
 
 class Queen(Piece):
     """Class for Queens"""
+
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
@@ -405,6 +477,7 @@ class Queen(Piece):
 
 class King(Piece):
     """Class for Kings"""
+
     def __init__(self, colour, position, model):
         Piece.__init__(self)
         self.model = model
