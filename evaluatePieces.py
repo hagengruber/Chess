@@ -1,6 +1,7 @@
-from time import sleep
 import pieces
 import math
+
+# ToDo: Kommentieren
 
 
 class Evaluate:
@@ -109,7 +110,7 @@ class Evaluate:
 
         return white - black
 
-    def position_evaluate(self, pieces_type, color, piece_val, lookup):
+    def position_evaluate(self, pieces_type, piece_val, lookup):
         white = 0
         black = 0
         count = 0

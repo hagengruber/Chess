@@ -3,7 +3,6 @@
 """
 import sys
 from algorithm import AI
-from time import sleep
 
 
 class Controller:
@@ -15,6 +14,7 @@ class Controller:
     def get_menu_choice(self):
         """Gets input from user and processes the input"""
         selection = input()
+
         if selection == '1':
             self.model.reset_pieces()
             self.model.view.update_board()
@@ -22,31 +22,44 @@ class Controller:
 
             self.model.currently_playing = 'Black'
 
-            # ToDO: Remove line. Nur für Tests des Algorithmus
-            ai = AI(self.model, self.view, "Black", "White")
-            ai.move()
-            self.model.currently_playing = 'White'
-            # END
-
             while self.model.check_for_king():
                 self.model.view.update_board()
-                # ToDO: Remove line. Nur für Tests des Algorithmus
-                if self.model.currently_playing == 'Black':
-                    ai.move()
-                else:
-                    self.get_movement_choice()
-                # END
 
-                # -> self.get_movement_choice()
+                self.get_movement_choice()
                 if self.model.currently_playing == 'White':
                     self.model.currently_playing = 'Black'
                 else:
                     self.model.currently_playing = 'White'
             print(self.model.currently_playing + ' lost because his king died!')
+
         elif selection == '2':
-            pass
+            self.model.reset_pieces()
+            self.model.view.update_board()
+            self.get_movement_choice()
+
+            self.model.currently_playing = 'Black'
+
+            ai = AI(self.model, self.view, "Black", "White")
+            ai.move()
+            self.model.currently_playing = 'White'
+
+            while self.model.check_for_king():
+                self.model.view.update_board()
+                if self.model.currently_playing == 'Black':
+                    ai.move()
+                else:
+                    self.get_movement_choice()
+
+                if self.model.currently_playing == 'White':
+                    self.model.currently_playing = 'Black'
+                else:
+                    self.model.currently_playing = 'White'
+            print(self.model.currently_playing + ' lost because his king died!')
+
         elif selection == '3':
+            # ToDo: Ladefunktion
             pass
+
         elif selection == '4':
             self.model.view.clear_console()
             sys.exit()

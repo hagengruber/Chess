@@ -3,7 +3,6 @@
 """
 from abc import ABCMeta, abstractmethod
 import math
-from time import sleep
 
 
 class Piece(metaclass=ABCMeta):
@@ -117,8 +116,6 @@ class Piece(metaclass=ABCMeta):
         space_to_check = self.position - 9
         row = main_row
         column = main_column
-        old_row = main_row + 1
-        old_column = main_column + 1
         while space_to_check in range(64):
 
             old_row = row
@@ -142,8 +139,6 @@ class Piece(metaclass=ABCMeta):
 
         row = main_row
         column = main_column
-        old_row = main_row - 1
-        old_column = main_column - 1
         space_to_check = self.position + 9
         while space_to_check in range(64):
 
@@ -168,8 +163,6 @@ class Piece(metaclass=ABCMeta):
 
         row = main_row
         column = main_column
-        old_row = main_row + 1
-        old_column = main_column - 1
         space_to_check = self.position - 7
         while space_to_check in range(64):
 
@@ -194,8 +187,6 @@ class Piece(metaclass=ABCMeta):
 
         row = main_row
         column = main_column
-        old_row = main_row - 1
-        old_column = main_column + 1
         space_to_check = self.position + 7
         while space_to_check in range(64):
 
@@ -349,8 +340,6 @@ class Bishop(Piece):
 
         allowed = self.check_diagonal(state)
 
-        test = self.check_diagonal(state)
-
         if return_all:
             return allowed
         if position in allowed:
@@ -413,10 +402,6 @@ class Pawn(Piece):
 
         if return_all:
             return allowed
-
-        # print("self position: " + str(self.position) + " position: " + str(position))
-        # print(allowed)
-        # sleep(50)
 
         if position in allowed:
             return True
