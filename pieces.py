@@ -243,6 +243,7 @@ class Rook(Piece):
             state = self.model.board_state
 
         allowed = self.check_linear(state)
+
         if return_all:
             return allowed
         if position in allowed:

@@ -13,6 +13,9 @@ class View:
         """Updates the board to show recent movement"""
         self.clear_console()
 
+        # ToDo: Letzten Zug farbig markieren
+        # -> z.B. mit print('\x1b[6;30;42m Test \x1b[0m')
+
         if state == "":
             state = self.model.board_state
 

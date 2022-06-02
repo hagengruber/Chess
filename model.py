@@ -60,10 +60,6 @@ class Model:
 
         # Var "update": the AI trys different moves but the board shouldn't update while AI thinks
 
-        print("start: " + str(start_pos))
-        print("Board state: " + str(self.board_state[start_pos]))
-        print("Board: " + str(self.board_state))
-
         model = self
         moved_piece = self.board_state[start_pos]
         killed_piece = self.board_state[goal_pos]
