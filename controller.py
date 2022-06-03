@@ -63,6 +63,11 @@ class Controller:
         elif selection == '4':
             self.model.view.clear_console()
             sys.exit()
+
+        elif selection == '5':
+            # ToDo: Rules + Options
+            pass
+
         else:
             print('Your choice is not valid! Please try again!')
             self.get_menu_choice()
