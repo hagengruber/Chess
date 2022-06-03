@@ -18,10 +18,7 @@ class AI:
 
     def alpha_beta_pruning(self, state, depth, alpha, beta, ai_playing):
 
-        # self.view.update_board(state)
-
         self.count += 1
-        # self.view.update_board(state)
 
         if depth == 0 or not self.model.check_for_king():
             d = self.calculate_board_value(state)
@@ -116,7 +113,6 @@ class AI:
         for i in state:
             try:
                 if i.colour == color:
-                    # print("Figur: " + i.colour + " " + str(i.position) + " " + str(type(i)))
                     possible_move = i.check_legal_move(i.position, state, True)
                     if len(possible_move) > 0:
                         for a in possible_move:
@@ -137,19 +133,11 @@ class AI:
         for next_move in self.get_possible_moves(self.color, state):
 
             temp = self.model.get_copy_board_state(state)
-            # save_board = self.model.get_copy_board_state()
 
             x, y = next_move
 
-            # old_pos = self.model.board_state[x].position
-
             temp[y] = temp[x]
             temp[x] = None
-
-            # self.model.move_piece(x, y, False)
-
-            # self.model.board_state[y].moved = False
-            # self.model.board_state[y].position = old_pos
 
             current_score = self.alpha_beta_pruning(temp, 3, -math.inf, math.inf, True)
 
@@ -157,16 +145,6 @@ class AI:
                 best_score = current_score
                 final_move = next_move
 
-            # elif current_score > best_score:
-            # best_score = current_score
-            # final_move = next_move
-
-            # self.model.board_state = save_board
-            # del save_board
-
         x, y = final_move
-
-        # print(final_move)
-        # sleep(50)
 
         self.model.move_piece(x, y)

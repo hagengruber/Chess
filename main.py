@@ -1,6 +1,6 @@
 """
     @Author: Schamberger Sandro: 22102471
-    @Author: Hagengruber Florian:
+    @Author: Hagengruber Florian: 22101608
     @Author: Joiko Christian:
 """
 from model import Model
