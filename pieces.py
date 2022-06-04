@@ -38,7 +38,6 @@ class Piece(metaclass=ABCMeta):
         if position in range(64):
             if state[position] is not None:
                 if state[position].colour != self.model.currently_playing:
-
                     return True
                 else:
                     return False
@@ -372,7 +371,6 @@ class Pawn(Piece):
             else:
                 return 'P'
 
-    # FixMe: Schmeisst falsch -> z.B. von B8 nach D1
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = []
@@ -382,7 +380,8 @@ class Pawn(Piece):
         if self.colour == 'White':
             if not self.check_occupied(self.position - 8, state):
                 allowed.append(self.position - 8)
-            if self.check_occupied_hostile(self.position - 9, state):
+            # ToDo: Prüfen, ob self.position % 7 != 1 die Gültigkeit der Züge gewährleistet
+            if self.check_occupied_hostile(self.position - 9, state) and self.position % 7 != 1:
                 allowed.append(self.position - 9)
             if self.check_occupied_hostile(self.position - 7, state):
                 allowed.append(self.position - 7)
@@ -393,7 +392,8 @@ class Pawn(Piece):
         else:
             if not self.check_occupied(self.position + 8, state):
                 allowed.append(self.position + 8)
-            if self.check_occupied_hostile(self.position + 9, state):
+            # ToDo: Prüfen, ob self.position % 7 != 1 die Gültigkeit der Züge gewährleistet
+            if self.check_occupied_hostile(self.position + 9, state) and self.position % 7 != 1:
                 allowed.append(self.position + 9)
             if self.check_occupied_hostile(self.position + 7, state):
                 allowed.append(self.position + 7)
