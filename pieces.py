@@ -372,7 +372,6 @@ class Pawn(Piece):
             else:
                 return 'P'
 
-    # FixMe: Springt beim ersten Zug über Figuren
     # FixMe: Schmeisst falsch -> z.B. von B8 nach D1
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
@@ -388,7 +387,8 @@ class Pawn(Piece):
             if self.check_occupied_hostile(self.position - 7, state):
                 allowed.append(self.position - 7)
             if not self.moved:
-                if not self.check_occupied(self.position - 16, state):
+                if not self.check_occupied(self.position - 16, state) and\
+                        not self.check_occupied(self.position - 8, state):
                     allowed.append(self.position - 16)
         else:
             if not self.check_occupied(self.position + 8, state):
@@ -398,7 +398,8 @@ class Pawn(Piece):
             if self.check_occupied_hostile(self.position + 7, state):
                 allowed.append(self.position + 7)
             if not self.moved:
-                if not self.check_occupied(self.position + 16, state):
+                if not self.check_occupied(self.position + 16, state) and\
+                        not self.check_occupied(self.position + 8, state):
                     allowed.append(self.position + 16)
 
         if return_all:
