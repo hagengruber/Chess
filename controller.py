@@ -17,13 +17,15 @@ class Controller:
 
         if selection == '1':
             self.model.reset_pieces()
+            # initializes the previous board of the view
+            self.view.last_board = self.model.get_copy_board_state()
+
             self.model.view.update_board()
             self.get_movement_choice()
 
             self.model.currently_playing = 'Black'
 
             while self.model.check_for_king():
-                self.model.view.update_board()
 
                 self.get_movement_choice()
                 if self.model.currently_playing == 'White':
@@ -34,6 +36,9 @@ class Controller:
 
         elif selection == '2':
             self.model.reset_pieces()
+            # initializes the previous board of the view
+            self.view.last_board = self.model.get_copy_board_state()
+
             self.model.view.update_board()
             self.get_movement_choice()
 
@@ -44,7 +49,6 @@ class Controller:
             self.model.currently_playing = 'White'
 
             while self.model.check_for_king():
-                self.model.view.update_board()
                 if self.model.currently_playing == 'Black':
                     ai.move()
                 else:

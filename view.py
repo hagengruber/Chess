@@ -8,13 +8,11 @@ class View:
     """Class that handles everything for the module"""
     def __init__(self):
         self.model = None
+        self.last_board = None
 
     def update_board(self, state=""):
         """Updates the board to show recent movement"""
         self.clear_console()
-
-        # ToDo: Letzten Zug farbig markieren
-        # -> z.B. mit print('\x1b[6;30;42m Test \x1b[0m')
 
         if state == "":
             state = self.model.board_state
@@ -30,14 +28,23 @@ class View:
             row = letters[i]
             for j in range(8):
                 if state[i*8 + j] is not None:
-                    row += '\u2502' + ' ' + state[i*8 + j].symbol + ' '
+                    if state[i*8 + j] != self.last_board[i*8 + j]:
+                        row += '\u2502\x1b[6;30;42m' + ' ' + state[i*8 + j].symbol + ' \x1b[0m'
+                    else:
+                        row += '\u2502' + ' ' + state[i * 8 + j].symbol + ' '
                 else:
-                    row += '\u2502' + '   '
+                    if state[i * 8 + j] != self.last_board[i * 8 + j]:
+                        row += '\u2502\x1b[6;30;42m' + '   \x1b[0m'
+                    else:
+                        row += '\u2502' + '   '
+
             row += '\u2502'
             print(row)
             if i != 7:
                 print(box_middle)
         print(box_bottom)
+
+        self.last_board = self.model.get_copy_board_state()
 
     @staticmethod
     def clear_console():
