@@ -173,5 +173,6 @@ class AI:
                 final_move = next_move
 
         x, y = final_move
+        print(str(x) + " " + str(y))
 
         self.model.move_piece(x, y)

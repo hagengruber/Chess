@@ -234,6 +234,7 @@ class Rook(Piece):
             else:
                 return 'R'
 
+    # FixMe: Turm kann von G8 nach H5 springen
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
 
@@ -377,13 +378,15 @@ class Pawn(Piece):
         if state == "":
             state = self.model.board_state
 
+        row = math.floor(self.position / 8)
+        column = self.position - (row * 7) - row
+
         if self.colour == 'White':
             if not self.check_occupied(self.position - 8, state):
                 allowed.append(self.position - 8)
-            # ToDo: Prüfen, ob self.position % 7 != 1 die Gültigkeit der Züge gewährleistet
-            if self.check_occupied_hostile(self.position - 9, state) and self.position % 7 != 1:
+            if self.check_occupied_hostile(self.position - 9, state) and column != 0:
                 allowed.append(self.position - 9)
-            if self.check_occupied_hostile(self.position - 7, state):
+            if self.check_occupied_hostile(self.position - 7, state) and column != 7:
                 allowed.append(self.position - 7)
             if not self.moved:
                 if not self.check_occupied(self.position - 16, state) and\
@@ -392,10 +395,9 @@ class Pawn(Piece):
         else:
             if not self.check_occupied(self.position + 8, state):
                 allowed.append(self.position + 8)
-            # ToDo: Prüfen, ob self.position % 7 != 1 die Gültigkeit der Züge gewährleistet
-            if self.check_occupied_hostile(self.position + 9, state) and self.position % 7 != 1:
+            if self.check_occupied_hostile(self.position + 9, state) and column != 7:
                 allowed.append(self.position + 9)
-            if self.check_occupied_hostile(self.position + 7, state):
+            if self.check_occupied_hostile(self.position + 7, state) and column != 0:
                 allowed.append(self.position + 7)
             if not self.moved:
                 if not self.check_occupied(self.position + 16, state) and\
@@ -447,6 +449,7 @@ class Queen(Piece):
             else:
                 return 'Q'
 
+    # FixMe: Dame kann von H3 auf G8 ziehen
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
 
