@@ -235,7 +235,6 @@ class Rook(Piece):
             else:
                 return 'R'
 
-    # FixMe: Zeigt legale Züge als Fehler an -> A1 - A2 (A2 gegnerisches Pferd)
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
 
@@ -374,6 +373,7 @@ class Pawn(Piece):
                 return 'P'
 
     # FixMe: Springt beim ersten Zug über Figuren
+    # FixMe: Schmeisst falsch -> z.B. von B8 nach D1
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
         allowed = []

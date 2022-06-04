@@ -33,7 +33,7 @@ class AI:
 
                 temp = self.model.get_copy_board_state(state)
 
-                change_position = False
+                change_position = None
 
                 try:
 
@@ -47,7 +47,7 @@ class AI:
 
                 value = self.alpha_beta_pruning(temp, depth - 1, alpha, beta, False)
 
-                if change_position:
+                if change_position is not None:
                     temp[y].position = change_position
 
                 self.model.currently_playing = "Black"
@@ -68,7 +68,7 @@ class AI:
 
                 temp = self.model.get_copy_board_state(state)
 
-                change_position = False
+                change_position = None
 
                 try:
 
@@ -81,7 +81,7 @@ class AI:
 
                 value = self.alpha_beta_pruning(temp, depth - 1, alpha, beta, True)
 
-                if change_position:
+                if change_position is not None:
                     temp[y].position = change_position
 
                 player_value = min(player_value, value)
@@ -125,6 +125,9 @@ class AI:
         return move
 
     def move(self):
+
+        print("AI thinks...")
+
         best_score = math.inf
         final_move = None
 
@@ -135,11 +138,22 @@ class AI:
             temp = self.model.get_copy_board_state(state)
 
             x, y = next_move
+            change_position = None
 
-            temp[y] = temp[x]
-            temp[x] = None
+            try:
+
+                # print("Type: " + str(type(state[x])))
+                change_position = temp[x].position
+                temp[x].position = y
+                temp[y] = temp[x]
+                temp[x] = None
+            except AttributeError:
+                pass
 
             current_score = self.alpha_beta_pruning(temp, 3, -math.inf, math.inf, True)
+
+            if change_position is not None:
+                temp[y].position = change_position
 
             if current_score < best_score:
                 best_score = current_score
