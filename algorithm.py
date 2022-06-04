@@ -6,20 +6,19 @@ import pieces
 from evaluatePieces import Evaluate
 
 
-# ToDo: Kommentieren
-
 class AI:
+    """Handles the behavior of the AI"""
+
     def __init__(self, model, view, color, enemy):
         self.model = model
         self.view = view
         self.color = color
         self.enemy = enemy  # Enemy Color
-        self.count = 0
 
     def alpha_beta_pruning(self, state, depth, alpha, beta, ai_playing):
+        """Returns the score of the current board"""
 
-        self.count += 1
-
+        # calcs the score of the current board
         if depth == 0 or not self.model.check_for_king():
             d = self.calculate_board_value(state)
             return d
@@ -27,6 +26,7 @@ class AI:
         if ai_playing:
             ai_value = -math.inf
             self.model.currently_playing = "White"
+            # calcs the score of every possible move
             for next_move in self.get_possible_moves(self.enemy, state):
 
                 x, y = next_move
@@ -45,6 +45,7 @@ class AI:
                 except AttributeError:
                     pass
 
+                # calcs the score of the current board
                 value = self.alpha_beta_pruning(temp, depth - 1, alpha, beta, False)
 
                 if change_position is not None:
@@ -52,6 +53,7 @@ class AI:
 
                 self.model.currently_playing = "Black"
 
+                # White want the score as high as possible
                 ai_value = max(ai_value, value)
 
                 alpha = max(alpha, value)
@@ -84,6 +86,7 @@ class AI:
                 if change_position is not None:
                     temp[y].position = change_position
 
+                # Black wants the score as low as possible
                 player_value = min(player_value, value)
                 beta = min(beta, value)
                 if beta <= alpha:
@@ -92,6 +95,7 @@ class AI:
 
     @staticmethod
     def calculate_board_value(current_game_state):
+        """Evaluate the current Board"""
 
         ev = Evaluate(current_game_state)
 
@@ -107,6 +111,7 @@ class AI:
 
     @staticmethod
     def get_possible_moves(color, state):
+        """Get all possible moves of the color"""
 
         move = []
 
@@ -125,14 +130,21 @@ class AI:
         return move
 
     def move(self):
+        """
+        Main function
+        Calcs the best move for the AI moves
+        """
 
         print("AI thinks...")
 
         best_score = math.inf
         final_move = None
 
+        # The current board self.model.board_state shouldn't be overwritten
+        # Therefore state is a copy of the Value and not a copy of the Instance
         state = self.model.get_copy_board_state()
 
+        # Calcs every possible move of the AI
         for next_move in self.get_possible_moves(self.color, state):
 
             temp = self.model.get_copy_board_state(state)
@@ -142,7 +154,7 @@ class AI:
 
             try:
 
-                # print("Type: " + str(type(state[x])))
+                # if a pieces got the attribute position, it has to be saved and changed
                 change_position = temp[x].position
                 temp[x].position = y
                 temp[y] = temp[x]
@@ -150,6 +162,7 @@ class AI:
             except AttributeError:
                 pass
 
+            # calcs the score of the current move
             current_score = self.alpha_beta_pruning(temp, 3, -math.inf, math.inf, True)
 
             if change_position is not None:

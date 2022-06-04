@@ -1,10 +1,11 @@
+"""Module that evaluate the current board"""
+
 import pieces
 import math
 
-# ToDo: Kommentieren
-
 
 class Evaluate:
+    """evaluates the current score"""
 
     def __init__(self, current_game_state):
         self.current_game_state = current_game_state
@@ -65,6 +66,9 @@ class Evaluate:
     ]
 
     def get_pieces_evaluate(self):
+        """
+        Returns the evaluation of the current pieces
+        """
 
         black = 0
         white = 0
@@ -111,6 +115,7 @@ class Evaluate:
         return white - black
 
     def position_evaluate(self, pieces_type, piece_val, lookup):
+        """Evaluates the current position of a pieces"""
         white = 0
         black = 0
         count = 0
