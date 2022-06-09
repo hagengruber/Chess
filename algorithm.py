@@ -4,6 +4,7 @@
 import math
 import pieces
 from evaluatePieces import Evaluate
+from tqdm import tqdm
 
 
 class AI:
@@ -143,9 +144,12 @@ class AI:
         # The current board self.model.board_state shouldn't be overwritten
         # Therefore state is a copy of the Value and not a copy of the Instance
         state = self.model.get_copy_board_state()
+        possible_moves = self.get_possible_moves(self.color, state)
+
+        output = tqdm(total=len(possible_moves))
 
         # Calcs every possible move of the AI
-        for next_move in self.get_possible_moves(self.color, state):
+        for next_move in possible_moves:
 
             temp = self.model.get_copy_board_state(state)
 
@@ -171,6 +175,10 @@ class AI:
             if current_score < best_score:
                 best_score = current_score
                 final_move = next_move
+
+            output.update()
+
+        output.close()
 
         x, y = final_move
         print(str(x) + " " + str(y))
