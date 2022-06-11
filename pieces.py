@@ -59,7 +59,12 @@ class Piece(metaclass=ABCMeta):
     def check_linear(self, state):
         """Returns a list of all free spaces north, east, west and south of a given space"""
         allowed = []
+
+        main_row = math.floor(self.position / 8)
+        main_column = self.position - (main_row * 7) - main_row
+
         space_to_check = self.position - 8
+
         while space_to_check in range(64):
             if not self.check_occupied_friendly(space_to_check, state):
                 if self.check_occupied_hostile(space_to_check, state):
@@ -83,6 +88,8 @@ class Piece(metaclass=ABCMeta):
                 break
         space_to_check = self.position - 1
         while space_to_check in range(64):
+            if main_column == 0:
+                break
             if not self.check_occupied_friendly(space_to_check, state):
                 if self.check_occupied_hostile(space_to_check, state):
                     allowed.append(space_to_check)
@@ -94,6 +101,8 @@ class Piece(metaclass=ABCMeta):
                 break
         space_to_check = self.position + 1
         while space_to_check in range(64):
+            if main_column == 7:
+                break
             if not self.check_occupied_friendly(space_to_check, state):
                 if self.check_occupied_hostile(space_to_check, state):
                     allowed.append(space_to_check)
@@ -234,7 +243,6 @@ class Rook(Piece):
             else:
                 return 'R'
 
-    # FixMe: Turm kann von G8 nach H5 springen
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
 
