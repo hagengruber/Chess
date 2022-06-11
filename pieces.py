@@ -75,7 +75,9 @@ class Piece(metaclass=ABCMeta):
                     space_to_check = space_to_check - 8
             else:
                 break
+
         space_to_check = self.position + 8
+
         while space_to_check in range(64):
             if not self.check_occupied_friendly(space_to_check, state):
                 if self.check_occupied_hostile(space_to_check, state):
@@ -86,10 +88,18 @@ class Piece(metaclass=ABCMeta):
                     space_to_check = space_to_check + 8
             else:
                 break
+
         space_to_check = self.position - 1
+        column = -1
+
         while space_to_check in range(64):
-            if main_column == 0:
+
+            if main_column == 0 or column == 0:
                 break
+
+            row = math.floor(space_to_check / 8)
+            column = space_to_check - (row * 7) - row
+
             if not self.check_occupied_friendly(space_to_check, state):
                 if self.check_occupied_hostile(space_to_check, state):
                     allowed.append(space_to_check)
@@ -99,10 +109,19 @@ class Piece(metaclass=ABCMeta):
                     space_to_check = space_to_check - 1
             else:
                 break
+
         space_to_check = self.position + 1
+
+        column = -1
+
         while space_to_check in range(64):
-            if main_column == 7:
+
+            if main_column == 7 or column == 7:
                 break
+
+            row = math.floor(space_to_check / 8)
+            column = space_to_check - (row * 7) - row
+
             if not self.check_occupied_friendly(space_to_check, state):
                 if self.check_occupied_hostile(space_to_check, state):
                     allowed.append(space_to_check)
@@ -457,7 +476,6 @@ class Queen(Piece):
             else:
                 return 'Q'
 
-    # FixMe: Dame kann von H3 auf G8 ziehen
     def check_legal_move(self, position, state="", return_all=False):
         """Makes a list of all legal moves and returns True if the given position is part of them"""
 
