@@ -2,9 +2,9 @@
     Module that contains the alpha-beta-pruning algorithm for the AI
 """
 import math
+from tqdm import tqdm
 import pieces
 from evaluatePieces import Evaluate
-from tqdm import tqdm
 
 
 class AI:
@@ -21,8 +21,7 @@ class AI:
 
         # calcs the score of the current board
         if depth == 0 or not self.model.check_for_king():
-            d = self.calculate_board_value(state)
-            return d
+            return self.calculate_board_value(state)
 
         if ai_playing:
             ai_value = -math.inf
@@ -30,7 +29,7 @@ class AI:
             # calcs the score of every possible move
             for next_move in self.get_possible_moves(self.enemy, state):
 
-                x, y = next_move
+                x_move, y_move = next_move
 
                 temp = self.model.get_copy_board_state(state)
 
@@ -39,10 +38,10 @@ class AI:
                 try:
 
                     # print("Type: " + str(type(state[x])))
-                    change_position = temp[x].position
-                    temp[x].position = y
-                    temp[y] = temp[x]
-                    temp[x] = None
+                    change_position = temp[x_move].position
+                    temp[x_move].position = y_move
+                    temp[y_move] = temp[x_move]
+                    temp[x_move] = None
                 except AttributeError:
                     pass
 
@@ -50,7 +49,7 @@ class AI:
                 value = self.alpha_beta_pruning(temp, depth - 1, alpha, beta, False)
 
                 if change_position is not None:
-                    temp[y].position = change_position
+                    temp[y_move].position = change_position
 
                 self.model.currently_playing = "Black"
 
@@ -62,51 +61,50 @@ class AI:
                     break
             return ai_value
 
-        else:
-            player_value = math.inf
-            self.model.currently_playing = "Black"
-            for next_move in self.get_possible_moves(self.color, state):
+        player_value = math.inf
+        self.model.currently_playing = "Black"
+        for next_move in self.get_possible_moves(self.color, state):
 
-                x, y = next_move
+            x_move, y_move = next_move
 
-                temp = self.model.get_copy_board_state(state)
+            temp = self.model.get_copy_board_state(state)
 
-                change_position = None
+            change_position = None
 
-                try:
+            try:
 
-                    change_position = temp[x].position
-                    temp[x].position = y
-                    temp[y] = temp[x]
-                    temp[x] = None
-                except AttributeError:
-                    pass
+                change_position = temp[x_move].position
+                temp[x_move].position = y_move
+                temp[y_move] = temp[x_move]
+                temp[x_move] = None
+            except AttributeError:
+                pass
 
-                value = self.alpha_beta_pruning(temp, depth - 1, alpha, beta, True)
+            value = self.alpha_beta_pruning(temp, depth - 1, alpha, beta, True)
 
-                if change_position is not None:
-                    temp[y].position = change_position
+            if change_position is not None:
+                temp[y_move].position = change_position
 
-                # Black wants the score as low as possible
-                player_value = min(player_value, value)
-                beta = min(beta, value)
-                if beta <= alpha:
-                    break
-            return player_value
+            # Black wants the score as low as possible
+            player_value = min(player_value, value)
+            beta = min(beta, value)
+            if beta <= alpha:
+                break
+        return player_value
 
     @staticmethod
     def calculate_board_value(current_game_state):
         """Evaluate the current Board"""
 
-        ev = Evaluate(current_game_state)
+        evaluate = Evaluate(current_game_state)
 
-        piece = ev.get_pieces_evaluate()
+        piece = evaluate.get_pieces_evaluate()
 
-        pawn = ev.position_evaluate(pieces.Pawn, 100, ev.PAWN_TABLE)
-        horse = ev.position_evaluate(pieces.Horse, 320, ev.HORSE_TABLE)
-        bishop = ev.position_evaluate(pieces.Bishop, 330, ev.BISHOP_TABLE)
-        rook = ev.position_evaluate(pieces.Rook, 500, ev.ROOK_TABLE)
-        queen = ev.position_evaluate(pieces.Queen, 900, ev.QUEEN_TABLE)
+        pawn = evaluate.position_evaluate(pieces.Pawn, 100, evaluate.PAWN_TABLE)
+        horse = evaluate.position_evaluate(pieces.Horse, 320, evaluate.HORSE_TABLE)
+        bishop = evaluate.position_evaluate(pieces.Bishop, 330, evaluate.BISHOP_TABLE)
+        rook = evaluate.position_evaluate(pieces.Rook, 500, evaluate.ROOK_TABLE)
+        queen = evaluate.position_evaluate(pieces.Queen, 900, evaluate.QUEEN_TABLE)
 
         return piece + pawn + rook + horse + bishop + queen
 
@@ -121,9 +119,9 @@ class AI:
                 if i.colour == color:
                     possible_move = i.check_legal_move(i.position, state, True)
                     if len(possible_move) > 0:
-                        for a in possible_move:
-                            if 0 < a < 64:
-                                move.append([i.position, a])
+                        for moves in possible_move:
+                            if 0 < moves < 64:
+                                move.append([i.position, moves])
 
             except AttributeError:
                 continue
@@ -153,16 +151,16 @@ class AI:
 
             temp = self.model.get_copy_board_state(state)
 
-            x, y = next_move
+            x_move, y_move = next_move
             change_position = None
 
             try:
 
                 # if a pieces got the attribute position, it has to be saved and changed
-                change_position = temp[x].position
-                temp[x].position = y
-                temp[y] = temp[x]
-                temp[x] = None
+                change_position = temp[x_move].position
+                temp[x_move].position = y_move
+                temp[y_move] = temp[x_move]
+                temp[x_move] = None
             except AttributeError:
                 pass
 
@@ -170,7 +168,7 @@ class AI:
             current_score = self.alpha_beta_pruning(temp, 3, -math.inf, math.inf, True)
 
             if change_position is not None:
-                temp[y].position = change_position
+                temp[y_move].position = change_position
 
             if current_score < best_score:
                 best_score = current_score
@@ -180,7 +178,7 @@ class AI:
 
         output.close()
 
-        x, y = final_move
-        print(str(x) + " " + str(y))
+        x_move, y_move = final_move
+        print(str(x_move) + " " + str(y_move))
 
-        self.model.move_piece(x, y)
+        self.model.move_piece(x_move, y_move)
