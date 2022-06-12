@@ -79,7 +79,7 @@ class Controller:
     def get_movement_choice(self):
         # ToDo: Save function
         # ToDo: Quiting Game
-        choice = input('Please enter your desired Move: ')
+        choice = input('Please enter your desired Move: ').upper()
         if len(choice) < 4:
             print('Your Choice is not valid. Please try again!')
             self.get_movement_choice()
