@@ -3,10 +3,26 @@
 """
 import sys
 from algorithm import AI
+import json
+import sys
+import os
+import pathlib
+from random import gammavariate
+from view import View
+from pieces import *
+
+
+def get_files(i):
+    if i == 1:
+        return pathlib.Path().absolute()
+    else:
+        dirPath = pathlib.Path().absolute()
+        return [f for f in os.listdir(dirPath) if os.path.isfile(os.path.join(dirPath, f))]
 
 
 class Controller:
     """Class that handles everything for the module"""
+
     def __init__(self, view):
         self.model = None
         self.view = view
@@ -21,6 +37,7 @@ class Controller:
             self.view.last_board = self.model.get_copy_board_state()
 
             self.model.view.update_board()
+            self.model.ai = False
             self.get_movement_choice()
 
             self.model.currently_playing = 'Black'
@@ -40,11 +57,12 @@ class Controller:
             self.view.last_board = self.model.get_copy_board_state()
 
             self.model.view.update_board()
+            ai = AI(self.model, self.view, "Black", "White")
+            self.model.ai = True
             self.get_movement_choice()
 
             self.model.currently_playing = 'Black'
 
-            ai = AI(self.model, self.view, "Black", "White")
             ai.move()
             self.model.currently_playing = 'White'
 
@@ -61,8 +79,8 @@ class Controller:
             print(self.model.currently_playing + ' lost because his king died!')
 
         elif selection == '3':
-            # ToDo: Ladefunktion
-            pass
+            self.load()
+            self.view.update_board()
 
         elif selection == '4':
             self.model.view.clear_console()
@@ -78,8 +96,18 @@ class Controller:
 
     def get_movement_choice(self):
         # ToDo: Save function
-        # ToDo: Quiting Game
         choice = input('Please enter your desired Move: ').upper()
+
+        if choice == "Q":
+            #ToDo: Quit Game
+            pass
+
+        if choice == "S":
+            self.save()
+            self.view.clear_console()
+            self.view.print_menu()
+            self.get_menu_choice()
+
         if len(choice) < 4:
             print('Your Choice is not valid. Please try again!')
             self.get_movement_choice()
@@ -93,3 +121,73 @@ class Controller:
             else:
                 print('Your Choice is not valid. Please try again!')
                 self.get_movement_choice()
+
+    # Board aktuellen spieler und ob KI spielt View Symbol
+    def save(self):
+        GameSave = {'currently_playing': str(self.model.currently_playing),
+                    'show_symbols': self.model.show_symbols,
+                    'board_state': {},
+                    'Ai': False}
+
+        if self.model.ai == True:
+            GameSave.update({'Ai': True})
+
+        dict = {}
+        for i in range(63):
+            if self.model.board_state[i] != None:
+                lol = self.model.board_state[i].__doc__.split(" ")
+                dict.update({str(i): {'piece': lol[2],
+                                      'colour': str(self.model.board_state[i].colour),
+                                      'moved': self.model.board_state[i].moved,
+                                      'postition': self.model.board_state[i].position}})
+            else:
+                dict.update({str(i): {'piece': None,
+                                      'symbol': None,
+                                      'colour': None,
+                                      'moved': None,
+                                      'postition': None}})
+
+        GameSave['board_state'].update(dict)
+
+        path = str(get_files(1))
+        name = "\GameSave.json"
+
+        with open(path + name, "w") as json_file:
+            json.dump(GameSave, json_file)
+
+    def load(self, name=""):
+        files = get_files(2)
+        name = 'GameSave.json'  # ggf Namen ändern
+
+        if name in files:  # Parameter eintragen fürs testen
+            with open("GameSave.json", "r") as Data:  # Parameter eintragen fürs testen
+                GameSave = json.load(Data)
+                # den aktuelen spieler abfragen
+
+                self.model.currently_playing = GameSave['currently_playing']
+                self.model.show_symbols = GameSave['show_symbols']
+                if 'Ai' in GameSave:
+                    self.ai = True
+
+                for i in range(63):
+                    if GameSave['board_state'][str(i)]['piece'] == 'None':  # Es fehtl Moved wird nicht übernommen
+                        self.model.board_state[i] = None
+
+                    else:
+                        if GameSave['board_state'][str(i)]['piece'] == 'Rooks':
+                            self.model.board_state[i] = Rook(GameSave['board_state'][str(i)]['colour'], i, self.model)
+                        if GameSave['board_state'][str(i)]['piece'] == 'Horses':
+                            self.model.board_state[i] = Horse(GameSave['board_state'][str(i)]['colour'], i, self.model)
+                        if GameSave['board_state'][str(i)]['piece'] == 'Bishops':
+                            self.model.board_state[i] = Bishop(GameSave['board_state'][str(i)]['colour'], i, self.model)
+                        if GameSave['board_state'][str(i)]['piece'] == 'Queens':
+                            self.model.board_state[i] = Queen(GameSave['board_state'][str(i)]['colour'], i, self.model)
+                        if GameSave['board_state'][str(i)]['piece'] == 'Kings':
+                            self.model.board_state[i] = King(GameSave['board_state'][str(i)]['colour'], i, self.model)
+                        if GameSave['board_state'][str(i)]['piece'] == 'Pawns':
+                            self.model.board_state[i] = Pawn(GameSave['board_state'][str(i)]['colour'], i, self.model)
+
+        else:
+            print("Es ist kein Spiel gespeichert")
+
+        self.view.last_board = self.model.get_copy_board_state()

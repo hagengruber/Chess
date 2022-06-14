@@ -26,6 +26,7 @@ class Model:
                             'H1': 56, 'H2': 57, 'H3': 58, 'H4': 59, 'H5': 60, 'H6': 61, 'H7': 62, 'H8': 63}
         self.pieces = []
         self.currently_playing = 'White'
+        self.ai = None
 
     def reset_pieces(self):
         """Reset the board to its starting state"""
