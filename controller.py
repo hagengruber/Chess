@@ -1,14 +1,11 @@
 """
     Module for getting and processing input from the user
 """
-import sys
 from algorithm import AI
 import json
 import sys
 import os
 import pathlib
-from random import gammavariate
-from view import View
 from pieces import *
 
 
@@ -26,6 +23,7 @@ class Controller:
     def __init__(self, view):
         self.model = None
         self.view = view
+        self.ai = None
 
     def get_menu_choice(self):
         """Gets input from user and processes the input"""
@@ -95,12 +93,10 @@ class Controller:
             self.get_menu_choice()
 
     def get_movement_choice(self):
-        # ToDo: Save function
         choice = input('Please enter your desired Move: ').upper()
 
         if choice == "Q":
-            #ToDo: Quit Game
-            pass
+            sys.exit()
 
         if choice == "S":
             self.save()
@@ -129,40 +125,40 @@ class Controller:
                     'board_state': {},
                     'Ai': False}
 
-        if self.model.ai == True:
+        if self.model.ai:
             GameSave.update({'Ai': True})
 
         dict = {}
         for i in range(63):
-            if self.model.board_state[i] != None:
+            if self.model.board_state[i] is not None:
                 lol = self.model.board_state[i].__doc__.split(" ")
                 dict.update({str(i): {'piece': lol[2],
                                       'colour': str(self.model.board_state[i].colour),
                                       'moved': self.model.board_state[i].moved,
-                                      'postition': self.model.board_state[i].position}})
+                                      'position': self.model.board_state[i].position}})
             else:
                 dict.update({str(i): {'piece': None,
                                       'symbol': None,
                                       'colour': None,
                                       'moved': None,
-                                      'postition': None}})
+                                      'position': None}})
 
         GameSave['board_state'].update(dict)
 
         path = str(get_files(1))
-        name = "\GameSave.json"
+        name = "\\GameSave.json"
 
         with open(path + name, "w") as json_file:
             json.dump(GameSave, json_file)
 
-    def load(self, name=""):
+    def load(self):
         files = get_files(2)
         name = 'GameSave.json'  # ggf Namen ändern
 
         if name in files:  # Parameter eintragen fürs testen
             with open("GameSave.json", "r") as Data:  # Parameter eintragen fürs testen
                 GameSave = json.load(Data)
-                # den aktuelen spieler abfragen
+                # den aktuellen spieler abfragen
 
                 self.model.currently_playing = GameSave['currently_playing']
                 self.model.show_symbols = GameSave['show_symbols']
@@ -170,7 +166,7 @@ class Controller:
                     self.ai = True
 
                 for i in range(63):
-                    if GameSave['board_state'][str(i)]['piece'] == 'None':  # Es fehtl Moved wird nicht übernommen
+                    if GameSave['board_state'][str(i)]['piece'] == 'None':  # Moved wird nicht übernommen
                         self.model.board_state[i] = None
 
                     else:
