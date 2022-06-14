@@ -4,7 +4,6 @@
 from view import View
 from controller import Controller
 from pieces import Rook, Horse, Bishop, Pawn, King, Queen
-from time import sleep
 
 
 # noinspection PyTypeChecker
