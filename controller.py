@@ -69,7 +69,7 @@ class Controller:
 
     def get_menu_choice(self):
         """Gets input from user and processes the input"""
-        selection = input()
+        selection = input('Please enter the number that corresponds to your desired menu: ')
 
         if selection == '1':
             self.model.ai = False

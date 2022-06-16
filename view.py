@@ -70,6 +70,9 @@ class View:
               + 5*no_block + block + 3*no_block + block)
         print(no_block + 3*block + no_block + block + no_block + block + no_block + 3*block
               + no_block + 3*block + no_block + 3*block + '\n')
-        print('Welcome to Chess! Please enter a number to choose an option :)')
+        print('Welcome to Chess! :)\n')
+        print('-Consider increasing the font size to make the board bigger and thus easier to see')
+        print('-Enter a move by giving the coordinates of the starting point and the goal point (Example: A3D6)')
+        print('-During a match, enter "q" to quit or "s" to save\n')
         print('(1)PlayerVsPlayer   (2)PlayerVsBot   (3)LoadGame   (4)Exit')
         self.model.controller.get_menu_choice()
