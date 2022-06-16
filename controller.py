@@ -90,10 +90,6 @@ class Controller:
             self.model.view.clear_console()
             sys.exit()
 
-        elif selection == '5':
-            # ToDo: Rules + Options
-            pass
-
         else:
             print('Your choice is not valid! Please try again!')
             self.get_menu_choice()
@@ -102,6 +98,7 @@ class Controller:
         choice = input('Please enter your desired Move: ').upper()
 
         if choice == "Q":
+            self.model.view.clear_console()
             sys.exit()
 
         if choice == "S":
