@@ -122,6 +122,10 @@ class Controller:
             self.view.print_menu()
             self.get_menu_choice()
 
+        if choice == "M":
+            self.view.clear_console()
+            self.view.print_menu()
+
         if len(choice) < 4:
             print('Your Choice is not valid. Please try again!')
             self.get_movement_choice()
@@ -138,6 +142,7 @@ class Controller:
 
     # Board aktuellen spieler und ob KI spielt View Symbol
     def save(self):
+        """Saves the current state to a JSON-File"""
         GameSave = {'currently_playing': str(self.model.currently_playing),
                     'show_symbols': self.model.show_symbols,
                     'board_state': {},
@@ -170,6 +175,7 @@ class Controller:
             json.dump(GameSave, json_file)
 
     def load(self):
+        """Loads a savestate"""
         files = get_files(2)
         name = 'GameSave.json'  # ggf Namen ändern
 
