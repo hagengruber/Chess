@@ -10,6 +10,7 @@ from pieces import *
 
 
 def get_files(i):
+    """Get Files from Directory"""
     if i == 1:
         return pathlib.Path().absolute()
     else:
@@ -28,6 +29,8 @@ class Controller:
         self.load_game = False
 
     def start_game(self):
+
+        """Starts the Game and goes into the Game Loop"""
 
         if not self.load_game:
             self.model.reset_pieces()
