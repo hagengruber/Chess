@@ -73,6 +73,7 @@ class Controller:
 
         if selection == '1':
             self.model.ai = False
+            self.model.show_symbols = self.get_symbol_preference()
             self.start_game()
 
         elif selection == '2':
@@ -94,7 +95,21 @@ class Controller:
             print('Your choice is not valid! Please try again!')
             self.get_menu_choice()
 
+    @staticmethod
+    def get_symbol_preference():
+        """Asks the user whether he wants to use symbols(True) or letters(False)"""
+        while True:
+            print('Do you want to use symbols? If not, letters will be used instead. (Y/N)')
+            choice = input()
+            if choice.lower() == 'y' or choice.lower() == 'yes':
+                return True
+            elif choice.lower() == 'n' or choice.lower() == 'no':
+                return False
+            else:
+                print('Invalid input! Please answer the question with "yes" or "no"')
+
     def get_movement_choice(self):
+        """Gets input from user during a game and processes the input"""
         choice = input('Please enter your desired Move: ').upper()
 
         if choice == "Q":
