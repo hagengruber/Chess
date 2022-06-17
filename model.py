@@ -101,6 +101,7 @@ class Model:
         return king_alive
 
     def get_copy_board_state(self, state=None):
+        """Deepcopy the board state"""
 
         if state is None:
             state = self.board_state
