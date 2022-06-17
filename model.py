@@ -40,6 +40,8 @@ class Model:
         self.board_state[7] = Rook('Black', 7, model)
         for i in range(8):
             self.board_state[8 + i] = Pawn('Black', 8 + i, model)
+        for i in range(16, 56):
+            self.board_state[i] = None
         self.board_state[56] = Rook('White', 56, model)
         self.board_state[57] = Horse('White', 57, model)
         self.board_state[58] = Bishop('White', 58, model)
