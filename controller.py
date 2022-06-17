@@ -66,6 +66,21 @@ class Controller:
                     self.model.currently_playing = 'White'
 
         print(self.model.currently_playing + ' lost because his king died!')
+        self.get_after_game_choice()
+
+    def get_after_game_choice(self):
+        """Asks the player if he wants to play another game"""
+        print('Do you want to play another round? (Y/N)')
+        choice = input()
+        if choice.lower() == 'y' or choice.lower() == 'yes':
+            self.view.clear_console()
+            self.start_game()
+        elif choice.lower() == 'n' or choice.lower() == 'no':
+            self.view.clear_console()
+            self.view.print_menu()
+        else:
+            print('Invalid input! Please answer with "yes" or "no"')
+            self.get_after_game_choice()
 
     def get_menu_choice(self):
         """Gets input from user and processes the input"""
