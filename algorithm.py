@@ -4,7 +4,6 @@
 import math
 from tqdm import tqdm
 import pieces
-from evaluatePieces import Evaluate
 
 
 class AI:
@@ -37,7 +36,6 @@ class AI:
 
                 try:
 
-                    # print("Type: " + str(type(state[x])))
                     change_position = temp[x_move].position
                     temp[x_move].position = y_move
                     temp[y_move] = temp[x_move]
@@ -93,18 +91,85 @@ class AI:
         return player_value
 
     @staticmethod
+    def get_score_pieces(current_game_state):
+
+        """
+        Returns the score of the current pieces
+        """
+
+        black = 0
+        white = 0
+
+        for i in current_game_state:
+
+            if type(i) is pieces.Rook:
+
+                if i.colour == "White":
+                    white += 500
+                else:
+                    black += 500
+
+            if type(i) is pieces.Pawn:
+                if i.colour == "White":
+                    white += 100
+                else:
+                    black += 100
+
+            if type(i) is pieces.Horse:
+                if i.colour == "White":
+                    white += 320
+                else:
+                    black += 320
+
+            if type(i) is pieces.Bishop:
+                if i.colour == "White":
+                    white += 330
+                else:
+                    black += 330
+
+            if type(i) is pieces.King:
+                if i.colour == "White":
+                    white += 20000
+                else:
+                    black += 20000
+
+            if type(i) is pieces.Queen:
+                if i.colour == "White":
+                    white += 900
+                else:
+                    black += 900
+
+        return white - black
+
+    @staticmethod
+    def score_position(pieces_type, piece_val, current_game_state):
+        """Evaluates the current position of a pieces"""
+        white = 0
+        black = 0
+        count = 0
+
+        for i in current_game_state:
+            if type(i) is pieces_type:
+                if i.colour == "White":
+                    white += piece_val
+                else:
+                    y = math.floor(count/8)
+                    x = count - (y * 7) - y
+                    black += pieces_type.table[7-x][y]
+            count += 1
+        return white-black
+
+    @staticmethod
     def calculate_board_value(current_game_state):
         """Evaluate the current Board"""
 
-        evaluate = Evaluate(current_game_state)
+        piece = AI.get_score_pieces(current_game_state)
 
-        piece = evaluate.get_pieces_evaluate()
-
-        pawn = evaluate.position_evaluate(pieces.Pawn, 100, evaluate.PAWN_TABLE)
-        horse = evaluate.position_evaluate(pieces.Horse, 320, evaluate.HORSE_TABLE)
-        bishop = evaluate.position_evaluate(pieces.Bishop, 330, evaluate.BISHOP_TABLE)
-        rook = evaluate.position_evaluate(pieces.Rook, 500, evaluate.ROOK_TABLE)
-        queen = evaluate.position_evaluate(pieces.Queen, 900, evaluate.QUEEN_TABLE)
+        pawn = AI.score_position(pieces.Pawn, 100, current_game_state)
+        horse = AI.score_position(pieces.Horse, 320, current_game_state)
+        bishop = AI.score_position(pieces.Bishop, 330, current_game_state)
+        rook = AI.score_position(pieces.Rook, 500, current_game_state)
+        queen = AI.score_position(pieces.Queen, 900, current_game_state)
 
         return piece + pawn + rook + horse + bishop + queen
 
@@ -179,6 +244,5 @@ class AI:
         output.close()
 
         x_move, y_move = final_move
-        print(str(x_move) + " " + str(y_move))
 
         self.model.move_piece(x_move, y_move)

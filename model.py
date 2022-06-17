@@ -79,8 +79,6 @@ class Model:
                 if update:
                     self.view.update_board()
             else:
-                print(start_pos)
-                print(goal_pos)
                 print('Sorry, this move is not legal. Please try again!')
                 self.controller.get_movement_choice()
                 if update:
