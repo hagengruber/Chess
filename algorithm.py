@@ -4,6 +4,7 @@
 import math
 from tqdm import tqdm
 import pieces
+import multiprocessing as m
 
 
 class AI:
@@ -14,6 +15,56 @@ class AI:
         self.view = view
         self.color = color
         self.enemy = enemy  # Enemy Color
+        self.Pawn_table = [
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [5, 10, 10, -20, -20, 10, 10, 5],
+            [5, -5, -10, 0, 0, -10, -5, 5],
+            [0, 0, 0, 20, 20, 0, 0, 0],
+            [5, 5, 10, 25, 25, 10, 5, 5],
+            [10, 10, 20, 30, 30, 20, 10, 10],
+            [50, 50, 50, 50, 50, 50, 50, 50],
+            [0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        self.Queen_table = [
+            [-20, -10, -10, -5, -5, -10, -10, -20],
+            [-10, 0, 5, 0, 0, 0, 0, -10],
+            [-10, 5, 5, 5, 5, 5, 0, -10],
+            [0, 0, 5, 5, 5, 5, 0, -5],
+            [-5, 0, 5, 5, 5, 5, 0, -5],
+            [-10, 0, 5, 5, 5, 5, 0, -10],
+            [-10, 0, 0, 0, 0, 0, 0, -10],
+            [-20, -10, -10, -5, -5, -10, -10, -20]
+        ]
+        self.Bishop_table = [
+            [-20, -10, -10, -10, -10, -10, -10, -20],
+            [-10, 5, 0, 0, 0, 0, 5, -10],
+            [-10, 10, 10, 10, 10, 10, 10, -10],
+            [-10, 0, 10, 10, 10, 10, 0, -10],
+            [-10, 5, 5, 10, 10, 5, 5, -10],
+            [-10, 0, 5, 10, 10, 5, 0, -10],
+            [-10, 0, 0, 0, 0, 0, 0, -10],
+            [-20, -10, -10, -10, -10, -10, -10, -20]
+        ]
+        self.Horse_table = [
+            [-50, -40, -30, -30, -30, -30, -40, -50],
+            [-40, -20, 0, 5, 5, 0, -20, -40],
+            [-30, 5, 10, 15, 15, 10, 5, -30],
+            [-30, 0, 15, 20, 20, 15, 0, -30],
+            [-30, 5, 15, 20, 20, 15, 0, -30],
+            [-30, 0, 10, 15, 15, 10, 0, -30],
+            [-40, -20, 0, 0, 0, 0, -20, -40],
+            [-50, -40, -30, -30, -30, -30, -40, -50]
+        ]
+        self.Rook_table = [
+            [0, 0, 0, 5, 5, 0, 0, 0],
+            [-5, 0, 0, 0, 0, 0, 0, -5],
+            [-5, 0, 0, 0, 0, 0, 0, -5],
+            [-5, 0, 0, 0, 0, 0, 0, -5],
+            [-5, 0, 0, 0, 0, 0, 0, -5],
+            [-5, 0, 0, 0, 0, 0, 0, -5],
+            [5, 10, 10, 10, 10, 10, 10, 5],
+            [0, 0, 0, 0, 0, 0, 0, 0]
+        ]
 
     def alpha_beta_pruning(self, state, depth, alpha, beta, ai_playing):
         """Returns the score of the current board"""
@@ -141,8 +192,8 @@ class AI:
 
         return white - black
 
-    @staticmethod
-    def score_position(pieces_type, piece_val, current_game_state):
+    # @staticmethod
+    def score_position(self, pieces_type, table, piece_val, current_game_state):
         """Evaluates the current position of a pieces"""
         white = 0
         black = 0
@@ -155,21 +206,21 @@ class AI:
                 else:
                     y = math.floor(count/8)
                     x = count - (y * 7) - y
-                    black += pieces_type.table[7-x][y]
+                    black += table[7-x][y]
             count += 1
         return white-black
 
-    @staticmethod
-    def calculate_board_value(current_game_state):
+    # @staticmethod
+    def calculate_board_value(self, current_game_state):
         """Evaluate the current Board"""
 
-        piece = AI.get_score_pieces(current_game_state)
+        piece = self.get_score_pieces(current_game_state)
 
-        pawn = AI.score_position(pieces.Pawn, 100, current_game_state)
-        horse = AI.score_position(pieces.Horse, 320, current_game_state)
-        bishop = AI.score_position(pieces.Bishop, 330, current_game_state)
-        rook = AI.score_position(pieces.Rook, 500, current_game_state)
-        queen = AI.score_position(pieces.Queen, 900, current_game_state)
+        pawn = self.score_position(pieces.Pawn, self.Pawn_table, 100, current_game_state)
+        horse = self.score_position(pieces.Horse, self.Horse_table, 320, current_game_state)
+        bishop = self.score_position(pieces.Bishop, self.Bishop_table, 330, current_game_state)
+        rook = self.score_position(pieces.Rook, self.Rook_table, 500, current_game_state)
+        queen = self.score_position(pieces.Queen, self.Queen_table, 900, current_game_state)
 
         return piece + pawn + rook + horse + bishop + queen
 
@@ -193,26 +244,13 @@ class AI:
 
         return move
 
-    def move(self):
-        """
-        Main function
-        Calcs the best move for the AI moves
-        """
-
-        print("AI thinks...")
+    def calc_move(self, moves, queue, state):
 
         best_score = math.inf
         final_move = None
 
-        # The current board self.model.board_state shouldn't be overwritten
-        # Therefore state is a copy of the Value and not a copy of the Instance
-        state = self.model.get_copy_board_state()
-        possible_moves = self.get_possible_moves(self.color, state)
-
-        output = tqdm(total=len(possible_moves))
-
         # Calcs every possible move of the AI
-        for next_move in possible_moves:
+        for next_move in moves:
 
             temp = self.model.get_copy_board_state(state)
 
@@ -239,10 +277,55 @@ class AI:
                 best_score = current_score
                 final_move = next_move
 
+        queue.put([final_move, best_score])
+
+    def move(self):
+        """
+        Main function
+        Calcs the best move for the AI moves
+        """
+
+        print("AI thinks...")
+
+        # The current board self.model.board_state shouldn't be overwritten
+        # Therefore state is a copy of the Value and not a copy of the Instance
+        state = self.model.get_copy_board_state()
+        possible_moves = self.get_possible_moves(self.color, state)
+        result = []
+
+        # Splits the list possible_moves in as many chunks as the PC has cores
+        k, a = divmod(len(possible_moves), m.cpu_count())
+        process_moves = list(possible_moves[i * k + min(i, a):
+                                            (i + 1) * k + min(i + 1, a)] for i in range(m.cpu_count()))
+
+        output = tqdm(total=m.cpu_count())
+
+        processes = []
+        queue = m.Queue()
+
+        for i in process_moves:
+            processes.append(m.Process(target=self.calc_move, args=(i, queue, state,)))
+            processes[len(processes) - 1].start()
+
+        for i in processes:
+            i.join()
             output.update()
 
-        output.close()
+        for _ in range(queue.qsize()):
+            result.append(queue.get())
 
-        x_move, y_move = final_move
+        result = sorted(result, key=lambda x: x[1])
+        same_score = []
+        lower_score = result[0][1]
+
+        for i in result:
+            if i[1] == lower_score:
+                same_score.append(i)
+
+        same_score.sort()
+
+        x_move, y_move = same_score[0][0]
+
+        output.close()
 
         self.model.move_piece(x_move, y_move)
